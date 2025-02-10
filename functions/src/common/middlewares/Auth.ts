@@ -6,14 +6,14 @@ import { responses } from "../classes/Response"
 type AuthRequest = Request & { user?: any }
 
 export const authenticateJWT = (req: AuthRequest, res: Response, next: NextFunction): void => {
-    const token = req.header('Authorization')?.split(' ')[1];
-    if (!token) throw new Error('Access denied')
-
     try {
+        const token = req.header('Authorization')?.split(' ')[1];
+        if (!token) throw new Error('Access denied')
+
         const decoded = jwt.verify(token, SECRET_KEY)
         req.user = decoded
         next()
     } catch (error) {
-        responses.error(req, res, 'Invalid token', 403)
+        responses.error(req, res, error, 403)
     }
 }

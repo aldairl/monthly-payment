@@ -13,6 +13,7 @@ class Responses {
 
     public error(req: Request, res: ExpressResponse, error: any, status?: number) {
         let statusCode = status || 500;
+
         let statusMessage = error?.message || error || ''
 
         res.status(statusCode).send({

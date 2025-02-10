@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { responses } from "../../common/classes/Response"
 import * as authService from '../services/authServices'
+import { APP_NAME } from "../../config/variables"
 
 export const loginController = async (req: Request, res: Response) => {
     try {
@@ -29,7 +30,7 @@ export const createUserController = async (req: Request, res: Response) => {
 
 export const healthController = async (req: Request, res: Response) => {
     try {
-        responses.success(req, res, {status: 'up'})
+        responses.success(req, res, {status: 'up', appName: APP_NAME})
     } catch (error) {
         responses.error(req, res, error)
     }
