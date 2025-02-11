@@ -32,6 +32,7 @@ export class PaymentController {
         try {
             const { amount, box, payer } = req.body
             const createdBy = req.user.id
+
             const newPayment = await paymentService.createPayment({ amount, box, payer, createdBy, type: 'income' })
             responses.success(req, res, newPayment)
         } catch (error) {
@@ -39,7 +40,7 @@ export class PaymentController {
         }
     }
 
-    async createExpensive(req: AuthRequest, res: Response): Promise<void> {
+    async createExpense(req: AuthRequest, res: Response): Promise<void> {
         try {
             const { amount, box, payer } = req.body
             const createdBy = req.user.id

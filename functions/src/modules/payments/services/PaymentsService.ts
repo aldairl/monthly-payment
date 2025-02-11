@@ -12,32 +12,19 @@ export class PaymentService {
         return await Payment.findById(id)
     }
 
-    async createPayment(PaymentData: Partial<IPayment>): Promise<IPayment> {
-        const payment = new Payment(PaymentData)
+    async createPayment(paymentData: Partial<IPayment>): Promise<IPayment> {
+        const receipt = await this.generateReceipt()
+        paymentData.receipt = receipt
+
+        const payment = new Payment(paymentData)
         const paymentSaved = await payment.save()
         // update cash flow
-        await cashFlowService.updateCashFlow(paymentSaved.box, Number(payment.amount), 'income')
+        await cashFlowService.updateCashFlow(paymentSaved.box, Number(payment.amount), paymentSaved.type)
         return paymentSaved
     }
 
     async updatePayment(id: string, updatedData: Partial<IPayment>): Promise<IPayment | null> {
-        let updated = null
-
-        // TODO update cash flow
-        if (updatedData.amount) {
-            updated = await Payment.findByIdAndUpdate(id, updatedData)
-
-            if (!updated) {
-                return null
-            }
-            // balance should substract ( currentAmount - newamount )
-            const substractValue = Number(updated?.amount) - Number(updatedData.amount)
-            await cashFlowService.updateCashFlow(updated.box, -substractValue, 'income')
-
-            updated = await Payment.findById(id)
-        } else {
-            updated = await Payment.findByIdAndUpdate(id, updatedData, { new: true })
-        }
+        const updated = await Payment.findByIdAndUpdate(id, updatedData, { new: true })
 
         return updated
     }
@@ -48,7 +35,13 @@ export class PaymentService {
             return { deleted: false }
         }
         // updated cash flow
-        await cashFlowService.updateCashFlow(result.box, -Number(result.amount), 'income')
+        await cashFlowService.updateCashFlow(result.box, -Number(result.amount), result.type)
         return { deleted: true }
+    }
+
+    async generateReceipt() {
+        // TODO
+        const date = new Date().getTime()
+        return `A-${date}`
     }
 }

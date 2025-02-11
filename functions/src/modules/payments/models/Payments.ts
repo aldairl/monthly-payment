@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema, Types } from "mongoose"
+import CashFlow from "../../cashFlow/model/CashFlow"
 
 export interface IPayment extends Document {
     payer: Types.ObjectId
@@ -35,13 +36,44 @@ const PaymentSchema: Schema<IPayment> = new Schema({
         required: true
     },
     type: {
+        type: String,
         enum: ['income', 'expense'],
-        required: false,
         default: 'income'
     },
     creation_date: {
         type: Date,
         default: Date.now
+    }
+})
+
+PaymentSchema.pre('findOneAndUpdate', async function (next) {
+    try {
+        const update = this.getUpdate() as { amount?: number }
+        if (!update.amount) {
+            return next()
+        }
+
+        const oldPayment = await this.model.findOne(this.getQuery()).exec()
+        if (!oldPayment) return next()
+
+        const amountDifference = update.amount - oldPayment.amount
+        const updateField = oldPayment.type === 'income' ? 'total_income' : 'total_expense';
+
+        // Actualizar cash_flow_by_month
+        await CashFlow.findOneAndUpdate(
+            { year: oldPayment.year, month: oldPayment.month, box: oldPayment.box },
+            {
+                $inc: {
+                    [updateField]: amountDifference,
+                    total_balance: amountDifference * (oldPayment.type === 'income' ? 1 : -1),
+                },
+            }
+        );
+
+        next()
+    } catch (error) {
+        console.error('Error en middleware de Payment:', error);
+        next(error as mongoose.CallbackError)
     }
 })
 

@@ -1,6 +1,6 @@
 import { Router } from "express"
-import { PaymentController } from '../controller/PaymentsController';
-import { authenticateJWT } from "../../../common/middlewares/Auth";
+import { PaymentController } from '../controller/PaymentsController'
+import { authenticateJWT } from "../../../common/middlewares/Auth"
 
 const paymentController = new PaymentController()
 const paymentsRouter = Router()
