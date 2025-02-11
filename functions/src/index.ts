@@ -1,10 +1,10 @@
 import express from 'express'
 import { https } from 'firebase-functions'
 import cors from "cors"
-import authRouter from './auth/routes/authRouter'
 import connectDatabase from './config/database'
-import boxRouter from './boxs/routes/BoxRouter'
-import paymentsRouter from './payments/routes/paymentRouter'
+import authRouter from './modules/auth/routes/authRouter'
+import boxRouter from './modules/boxs/routes/BoxRouter'
+import paymentsRouter from './modules/payments/routes/paymentRouter'
 
 connectDatabase()
 

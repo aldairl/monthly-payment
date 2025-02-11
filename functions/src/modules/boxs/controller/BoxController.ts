@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { BoxService } from "../services/BoxService"
-import { responses } from "../../common/classes/Response";
+import { responses } from "../../../common/classes/Response";
 
 const boxService = new BoxService()
 

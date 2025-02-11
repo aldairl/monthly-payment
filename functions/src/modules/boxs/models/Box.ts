@@ -10,7 +10,7 @@ export interface IBox extends Document {
 
 const BoxSchema: Schema = new Schema({
     name: { type: String, required: true },
-    status: { type: String, required: true, enum: ['open', 'close'], default:'open' },
+    status: { type: String, enum: ['open', 'close'], default:'open' },
     description: { type: String, required: true },
     creation_date: { type: Date, default: Date.now },
     close_date: { type: Date, required: false },

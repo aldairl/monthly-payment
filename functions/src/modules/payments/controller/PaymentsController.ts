@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { PaymentService } from "../services/PaymentsService"
-import { responses } from "../../common/classes/Response"
-import { AuthRequest } from "../../common/interfaces/authRequest"
+import { responses } from "../../../common/classes/Response"
+import { AuthRequest } from "../../../common/interfaces/authRequest"
 
 const paymentService = new PaymentService()
 
@@ -32,7 +32,18 @@ export class PaymentController {
         try {
             const { amount, box, payer } = req.body
             const createdBy = req.user.id
-            const newPayment = await paymentService.createPayment({ amount, box, payer, createdBy })
+            const newPayment = await paymentService.createPayment({ amount, box, payer, createdBy, type: 'income' })
+            responses.success(req, res, newPayment)
+        } catch (error) {
+            responses.error(req, res, error)
+        }
+    }
+
+    async createExpensive(req: AuthRequest, res: Response): Promise<void> {
+        try {
+            const { amount, box, payer } = req.body
+            const createdBy = req.user.id
+            const newPayment = await paymentService.createPayment({ amount, box, payer, createdBy, type: 'expense' })
             responses.success(req, res, newPayment)
         } catch (error) {
             responses.error(req, res, error)

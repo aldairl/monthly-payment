@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { createUserController, healthController, loginController } from "../controllers/authController";
-import { authenticateJWT } from "../../common/middlewares/Auth";
+import { authenticateJWT } from "../../../common/middlewares/Auth";
 
 const authRouter = Router()
 

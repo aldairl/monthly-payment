@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
-import { responses } from "../../common/classes/Response"
+import { responses } from "../../../common/classes/Response"
 import * as authService from '../services/authServices'
-import { APP_NAME } from "../../config/variables"
+import { APP_NAME } from "../../../config/variables"
 
 export const loginController = async (req: Request, res: Response) => {
     try {

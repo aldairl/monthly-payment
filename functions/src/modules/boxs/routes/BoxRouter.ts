@@ -1,6 +1,6 @@
 import { Router } from "express"
-import { BoxController } from "../controller/boxController"
-import { authenticateJWT } from "../../common/middlewares/Auth"
+import { BoxController } from "../controller/BoxController"
+import { authenticateJWT } from "../../../common/middlewares/Auth"
 
 const boxRouter = Router()
 const boxController = new BoxController()

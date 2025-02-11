@@ -1,4 +1,4 @@
-import { SECRET_KEY } from "../../config/variables"
+import { SECRET_KEY } from "../../../config/variables"
 import UserModel, { IUser } from "../models/userModel"
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'

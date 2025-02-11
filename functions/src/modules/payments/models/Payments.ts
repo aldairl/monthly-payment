@@ -4,12 +4,13 @@ export interface IPayment extends Document {
     payer: Types.ObjectId
     amount: Number
     box: Types.ObjectId
-    recept: String
+    receipt: String
+    type: 'income' | 'expense'
     creation_date: Date
     createdBy: Types.ObjectId
 }
 
-const PaymentSchema: Schema = new Schema({
+const PaymentSchema: Schema<IPayment> = new Schema({
     payer: {
         type: Schema.Types.ObjectId,
         ref: 'User',
@@ -32,6 +33,11 @@ const PaymentSchema: Schema = new Schema({
     receipt: {
         type: String,
         required: true
+    },
+    type: {
+        enum: ['income', 'expense'],
+        required: false,
+        default: 'income'
     },
     creation_date: {
         type: Date,
