@@ -1,9 +1,8 @@
-import { NextFunction, Request, Response } from "express"
+import { NextFunction, Response } from "express"
 import jwt from 'jsonwebtoken'
 import { SECRET_KEY } from "../../config/variables"
 import { responses } from "../classes/Response"
-
-type AuthRequest = Request & { user?: any }
+import { AuthRequest } from "../interfaces/authRequest"
 
 export const authenticateJWT = (req: AuthRequest, res: Response, next: NextFunction): void => {
     try {

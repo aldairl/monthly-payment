@@ -4,6 +4,7 @@ import cors from "cors"
 import authRouter from './auth/routes/authRouter'
 import connectDatabase from './config/database'
 import boxRouter from './boxs/routes/BoxRouter'
+import paymentsRouter from './payments/routes/paymentRouter'
 
 connectDatabase()
 
@@ -13,5 +14,6 @@ app.use(express.json())
 
 app.use("/auth", authRouter)
 app.use("/boxes", boxRouter)
+app.use("/payments", paymentsRouter)
 
 export const api = https.onRequest(app)

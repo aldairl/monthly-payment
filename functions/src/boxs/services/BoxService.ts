@@ -18,8 +18,8 @@ export class BoxService {
         return await Box.findByIdAndUpdate(id, updatedData, { new: true })
     }
 
-    async deleteBox(id: string): Promise<boolean> {
+    async deleteBox(id: string): Promise<object> {
         const result = await Box.findByIdAndDelete(id)
-        return result !== null
+        return { deleted: result !== null }
     }
 }
