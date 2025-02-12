@@ -1,11 +1,12 @@
 import { Router } from "express"
-import { PaymentController } from '../controller/PaymentsController'
+import { ExpenseController } from '../controller/ExpensesController'
 import { authenticateJWT } from "../../../common/middlewares/Auth"
 
 
-const paymentController = new PaymentController()
+const expenseController = new ExpenseController()
 const expensesRouter = Router()
 
-expensesRouter.post("/", authenticateJWT, paymentController.createExpense)
+expensesRouter.get("/", authenticateJWT, expenseController.getAllExpenses)
+expensesRouter.post("/", authenticateJWT, expenseController.createExpense)
 
 export default expensesRouter

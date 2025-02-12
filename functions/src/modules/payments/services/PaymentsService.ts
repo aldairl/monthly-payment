@@ -4,8 +4,8 @@ import Payment, { IPayment } from "../models/Payments"
 const cashFlowService = new CashFlowService()
 
 export class PaymentService {
-    async getAllPayments(): Promise<IPayment[]> {
-        return await Payment.find()
+    async getAllPayments(query: object): Promise<IPayment[]> {
+        return await Payment.find(query)
     }
 
     async getPaymentById(id: string): Promise<IPayment | null> {

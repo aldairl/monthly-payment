@@ -8,7 +8,7 @@ const paymentService = new PaymentService()
 export class PaymentController {
     async getAllPaymentes(req: Request, res: Response): Promise<void> {
         try {
-            const Paymentes = await paymentService.getAllPayments()
+            const Paymentes = await paymentService.getAllPayments({ type: 'income' })
             responses.success(req, res, Paymentes)
         } catch (error) {
             responses.error(req, res, error)
@@ -34,17 +34,6 @@ export class PaymentController {
             const createdBy = req.user.id
 
             const newPayment = await paymentService.createPayment({ amount, box, payer, createdBy, type: 'income' })
-            responses.success(req, res, newPayment)
-        } catch (error) {
-            responses.error(req, res, error)
-        }
-    }
-
-    async createExpense(req: AuthRequest, res: Response): Promise<void> {
-        try {
-            const { amount, box, payer } = req.body
-            const createdBy = req.user.id
-            const newPayment = await paymentService.createPayment({ amount, box, payer, createdBy, type: 'expense' })
             responses.success(req, res, newPayment)
         } catch (error) {
             responses.error(req, res, error)
