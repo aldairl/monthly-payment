@@ -6,6 +6,7 @@ import authRouter from './modules/auth/routes/authRouter'
 import boxRouter from './modules/boxs/routes/BoxRouter'
 import paymentsRouter from './modules/payments/routes/paymentRouter'
 import expensesRouter from './modules/payments/routes/expenseRouter'
+import conceptsRouter from './modules/payments/routes/conceptRouter'
 
 connectDatabase()
 
@@ -17,5 +18,6 @@ app.use("/auth", authRouter)
 app.use("/box", boxRouter)
 app.use("/payments", paymentsRouter)
 app.use("/expenses", expensesRouter)
+app.use("/concepts", conceptsRouter)
 
 export const api = https.onRequest(app)
