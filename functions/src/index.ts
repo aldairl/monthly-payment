@@ -7,6 +7,8 @@ import boxRouter from './modules/boxs/routes/BoxRouter'
 import paymentsRouter from './modules/payments/routes/paymentRouter'
 import expensesRouter from './modules/payments/routes/expenseRouter'
 import conceptsRouter from './modules/payments/routes/conceptRouter'
+import monthRouter from './modules/payments/routes/monthRouter'
+import yearRouter from './modules/payments/routes/YearRouter'
 
 connectDatabase()
 
@@ -19,5 +21,7 @@ app.use("/box", boxRouter)
 app.use("/payments", paymentsRouter)
 app.use("/expenses", expensesRouter)
 app.use("/concepts", conceptsRouter)
+app.use("/months", monthRouter)
+app.use("/years", yearRouter)
 
 export const api = https.onRequest(app)

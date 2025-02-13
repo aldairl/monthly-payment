@@ -19,9 +19,9 @@ export class ExpenseController {
 
     async createExpense(req: AuthRequest, res: Response): Promise<void> {
         try {
-            const { amount, box, payer } = req.body
+            const { amount, box, payer, concepts } = req.body
             const createdBy = req.user.id
-            const newPayment = await paymentService.createPayment({ amount, box, payer, createdBy, type: 'expense' })
+            const newPayment = await paymentService.createPaymentTransaction({ amount, box, payer, createdBy, type: 'expense' }, concepts)
             responses.success(req, res, newPayment)
         } catch (error) {
             responses.error(req, res, error)
