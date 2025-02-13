@@ -30,10 +30,10 @@ export class PaymentController {
 
     async createPayment(req: AuthRequest, res: Response): Promise<void> {
         try {
-            const { amount, box, payer } = req.body
+            const { amount, box, payer, concepts } = req.body
             const createdBy = req.user.id
 
-            const newPayment = await paymentService.createPayment({ amount, box, payer, createdBy, type: 'income' })
+            const newPayment = await paymentService.createPaymentTransaction({ amount, box, payer, createdBy, type: 'income' }, concepts)
             responses.success(req, res, newPayment)
         } catch (error) {
             responses.error(req, res, error)
@@ -57,7 +57,7 @@ export class PaymentController {
 
     async deletePayment(req: Request, res: Response): Promise<void> {
         try {
-            const success = await paymentService.deletePayment(req.params.id)
+            const success = await paymentService.deletePaymentTransaction(req.params.id)
             if (success) {
                 responses.success(req, res, success)
             } else {

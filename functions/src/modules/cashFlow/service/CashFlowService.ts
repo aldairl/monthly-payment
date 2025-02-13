@@ -1,9 +1,9 @@
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import CashFlow from "../model/CashFlow";
 
 export class CashFlowService {
 
-    async updateCashFlow(boxId: Types.ObjectId | string,  amount: number, type: 'income' | 'expense'): Promise<void> {
+    async updateCashFlow(boxId: Types.ObjectId | string,  amount: number, type: 'income' | 'expense', session: mongoose.ClientSession): Promise<void> {
         const updateField = type === 'income' ? 'total_income' : 'total_expense';
         const balanceChange = type === 'income' ? amount : -amount;
 
@@ -13,7 +13,7 @@ export class CashFlowService {
                 {
                     $inc: { [updateField]: amount, total_balance: balanceChange },
                 },
-                { upsert: true, new: true }
+                { upsert: true, new: true, session }
             )
 
             console.log(`Cash flow actualizado para ${cashSaved.year}-${cashSaved.month}`)
