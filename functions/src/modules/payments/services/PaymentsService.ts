@@ -1,9 +1,11 @@
 import mongoose from "mongoose"
 import { CashFlowService } from "../../cashFlow/service/CashFlowService"
 import Payment, { IPayment } from "../models/Payments"
-import { IConcept } from "../models/Concept"
+import { ConceptService } from "./ConceptService"
+import { IPaymentConcept } from "../models/PaymentConcepts"
 
 const cashFlowService = new CashFlowService()
+const conceptService = new ConceptService()
 
 export class PaymentService {
     async getAllPayments(query: object): Promise<IPayment[]> {
@@ -17,16 +19,12 @@ export class PaymentService {
     async createPayment(paymentData: Partial<IPayment>, session: mongoose.ClientSession): Promise<IPayment> {
         const receipt = await this.generateReceipt()
         paymentData.receipt = receipt
-
-        // const paymentSaved = new Payment(paymentData)
-        // const paymentSaved = await payment.save({ session })
         const paymentSaved = await Payment.create([{ ...paymentData }], { session })
         return paymentSaved[0]
     }
 
     async updatePayment(id: string, updatedData: Partial<IPayment>): Promise<IPayment | null> {
         const updated = await Payment.findByIdAndUpdate(id, updatedData, { new: true })
-
         return updated
     }
 
@@ -48,7 +46,13 @@ export class PaymentService {
         const session = await mongoose.startSession()
         session.startTransaction()
         try {
+            // Detele payment
             const result = await this.deletePayment(id, session)
+
+            // delete payment concepts
+            await conceptService.deletePaymentConcepts(result.id, session)
+
+            // Update cash flow
             await cashFlowService.updateCashFlow(result.box, -Number(result.amount), result.type, session)
 
             // confirm transaction
@@ -62,14 +66,15 @@ export class PaymentService {
         }
     }
 
-    async createPaymentTransaction(paymentData: Partial<IPayment>, concepts: Partial<IConcept[]>) {
+    async createPaymentTransaction(paymentData: Partial<IPayment>, concepts: Partial<IPaymentConcept[]>) {
         // start transaction
         const session = await mongoose.startSession()
         session.startTransaction()
         try {
             const paymentSaved = await this.createPayment(paymentData, session)
             await cashFlowService.updateCashFlow(paymentSaved.box, Number(paymentSaved.amount), paymentSaved.type, session)
-            //TODO create concepts
+            
+            await conceptService.createPaymentConcepts(paymentSaved.id, concepts, session)
 
             await session.commitTransaction()
             session.endSession()
