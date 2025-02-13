@@ -1,6 +1,10 @@
 import useMediaQuery from "@mui/material/useMediaQuery"
 import * as yup from "yup"
 import { Login } from './Login'
+import { useDispatch, useSelector } from "react-redux"
+import { loginUser } from "../../store/thunks"
+import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 
 const checkoutSchema = yup.object().shape({
@@ -15,11 +19,22 @@ const initialValues = {
 
 export const LoginContainer = () => {
 
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const { username, token, error, loading } = useSelector(state => state.auth)
+
     const isNonMobile = useMediaQuery("(min-width:600px)")
 
-    const handleFormSubmit = (values) => {
-        console.log(values)
+    const handleFormSubmit = ({ username, password }) => {
+        console.log({ username, password })
+        dispatch(loginUser(username, password))
     }
+
+    useEffect(() => {
+        if (token && username) {
+            navigate('/dash/years')
+        }
+    }, [token, username, navigate])
 
     return (
         <Login
@@ -27,6 +42,8 @@ export const LoginContainer = () => {
             handleFormSubmit={handleFormSubmit}
             initialValues={initialValues}
             checkoutSchema={checkoutSchema}
+            error={error}
+            loading={loading}
         />
     )
 }

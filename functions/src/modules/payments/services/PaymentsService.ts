@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 import { CashFlowService } from "../../cashFlow/service/CashFlowService"
 import Payment, { IPayment } from "../models/Payments"
-import { ConceptService } from "./MonthService"
+import { ConceptService } from "./ConceptService"
 import { IPaymentConcept } from "../models/PaymentConcepts"
 
 const cashFlowService = new CashFlowService()
