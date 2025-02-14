@@ -34,7 +34,7 @@ export const CustomSidebar = ({ collapsed, toggled, hasImage, theme, menuItemSty
 
           <Menu menuItemStyles={menuItemStyles}>
 
-            <MenuItem onClick={() => setCollapsed(!collapsed)} style={{ marginTop: 10, marginBottom: 10 }} >
+            <MenuItem onClick={() => setCollapsed(prev => toggled ? false : !prev )} style={{ marginTop: 10, marginBottom: 10 }} >
               <Box>
                 {collapsed ?
                   <IconButton color='primary' >
@@ -42,7 +42,7 @@ export const CustomSidebar = ({ collapsed, toggled, hasImage, theme, menuItemSty
                   </IconButton>
                   :
                   <Typography variant="subtitle1" fontWeight={700} color="#0098e5" display='flex' justifyContent='space-between' alignItems='center'>
-                    <div>Copy sidebarPrp</div>
+                    <div>Registro de mensualidad</div>
                     <MenuOutlinedIcon />
                   </Typography>
                 }

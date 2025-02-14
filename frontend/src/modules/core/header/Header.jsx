@@ -37,16 +37,11 @@ export const Header = ({ theme, ToggleTheme, hasImage, sidebarCollapsed, setTogg
 
       </Box>
       <Box display="flex">
-        <IconButton onClick={ToggleTheme}>
+        <IconButton onClick={ToggleTheme} color='primary'>
           {theme === "dark" ? (
-            <IconButton color='primary'>
-              <LightModeOutlinedIcon />
-            </IconButton>
+            <LightModeOutlinedIcon />
           ) : (
-            <IconButton>
-              <DarkModeOutlinedIcon />
-            </IconButton>
-
+            <DarkModeOutlinedIcon />
           )}
         </IconButton>
       </Box>

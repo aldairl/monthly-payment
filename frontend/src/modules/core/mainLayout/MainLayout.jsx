@@ -1,18 +1,26 @@
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { CustomSidebarContainer } from "../sidebar/CustomSidebarContainer"
 import { Outlet } from "react-router-dom"
 import { Header } from "../header/Header"
+import { ColorModeContext } from "../../../../theme"
+import { useTheme } from "@mui/material"
 
 export const MainLayout = () => {
-    const [theme, setTheme] = useState('light')
+    const themMaterial = useTheme()
+    const [theme, setTheme] = useState(themMaterial.palette.mode)
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
     const [toggled, setToggled] = useState(false)
+    const colorMode = useContext(ColorModeContext)
 
     const hasImage = true
 
     const toggleTheme = () => {
-        setTheme((prev) => (prev === "light" ? "dark" : "light"))
+        colorMode.toggleColorMode()
     }
+
+    useEffect(() => {
+        setTheme(themMaterial.palette.mode)
+    }, [themMaterial])
 
     return (
         <div style={{ display: 'flex', height: '100vh', width: '100%' }}>
