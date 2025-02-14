@@ -7,7 +7,6 @@ export const AppRouter = () => {
         <Routes>
             <Route path="/auth/*" element={<LoginRouter />} />
             <Route path="/dash/*" element={<DashRouter />} />
-
             <Route path='*' element={ <Navigate to='/auth' replace /> } />
         </Routes>
     )

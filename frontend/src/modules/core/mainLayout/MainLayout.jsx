@@ -15,16 +15,7 @@ export const MainLayout = () => {
     }
 
     return (
-        <main className="content">
-
-            <Header
-                theme={theme}
-                ToggleTheme={toggleTheme}
-                hasImage={hasImage}
-                sidebarCollapsed={sidebarCollapsed}
-                toggled={toggled}
-                setToggled={setToggled}
-            />
+        <div style={{ display: 'flex', height: '100vh', width: '100%' }}>
 
             <CustomSidebarContainer
                 theme={theme}
@@ -33,7 +24,17 @@ export const MainLayout = () => {
                 setToggled={setToggled}
                 toggled={toggled}
             />
-            <Outlet />
-        </main>
+            <main className="content">
+                <Header
+                    theme={theme}
+                    ToggleTheme={toggleTheme}
+                    hasImage={hasImage}
+                    sidebarCollapsed={sidebarCollapsed}
+                    toggled={toggled}
+                    setToggled={setToggled}
+                />
+                <Outlet />
+            </main>
+        </div>
     )
 }
