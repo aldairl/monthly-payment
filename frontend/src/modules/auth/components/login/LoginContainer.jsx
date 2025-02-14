@@ -26,8 +26,9 @@ export const LoginContainer = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)")
 
     const handleFormSubmit = ({ username, password }) => {
-        console.log({ username, password })
-        dispatch(loginUser(username, password))
+        // console.log({ username, password })
+        // dispatch(loginUser(username, password))
+        navigate('/dash/years')
     }
 
     useEffect(() => {

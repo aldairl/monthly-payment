@@ -118,7 +118,7 @@ export const tokens = (mode) => ({
                 900: "#e1e2fe",
             },
         }),
-});
+})
 
 // mui theme settings
 export const themeSettings = (mode) => {
@@ -191,12 +191,12 @@ export const themeSettings = (mode) => {
             },
         },
     };
-};
+}
 
 // context for color mode
 export const ColorModeContext = createContext({
     toggleColorMode: () => { },
-});
+})
 
 export const useMode = () => {
     const [mode, setMode] = useState("dark");
@@ -211,4 +211,4 @@ export const useMode = () => {
 
     const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
     return [theme, colorMode];
-};
+}

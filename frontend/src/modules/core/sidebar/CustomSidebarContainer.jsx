@@ -1,0 +1,66 @@
+import PropTypes from 'prop-types'
+import { menuClasses } from 'react-pro-sidebar'
+import { CustomSidebar } from "./CustomSidebar"
+import { hexToRgba, themes } from './themeSidebar'
+import { useState } from 'react'
+
+
+export const CustomSidebarContainer = ({ theme, setBroken, hasImage, toggled, setToggled }) => {
+
+    const [collapsed, setCollapsed] = useState(false)
+
+    const menuItemStyles = {
+        root: {
+            fontSize: '13px',
+            fontWeight: 400,
+        },
+        icon: {
+            color: themes[theme].menu.icon,
+            [`&.${menuClasses.disabled}`]: {
+                color: themes[theme].menu.disabled.color,
+            },
+        },
+        SubMenuExpandIcon: {
+            color: '#b6b7b9',
+        },
+        subMenuContent: ({ level }) => ({
+            backgroundColor:
+                level === 0
+                    ? hexToRgba(themes[theme].menu.menuContent, hasImage && !collapsed ? 0.4 : 1)
+                    : 'transparent',
+        }),
+        button: {
+            [`&.${menuClasses.disabled}`]: {
+                color: themes[theme].menu.disabled.color,
+            },
+            '&:hover': {
+                backgroundColor: hexToRgba(themes[theme].menu.hover.backgroundColor, hasImage ? 0.8 : 1),
+                color: themes[theme].menu.hover.color,
+            },
+        },
+        label: ({ open }) => ({
+            fontWeight: open ? 600 : undefined,
+        })
+    }
+
+    return (
+        <CustomSidebar
+            theme={theme}
+            menuItemStyles={menuItemStyles}
+            hasImage={hasImage}
+            collapsed={collapsed}
+            setCollapsed={setCollapsed}
+            toggled={toggled}
+            setToggled={setToggled}
+            setBroken={setBroken}
+        />
+    )
+}
+
+CustomSidebarContainer.propTypes = {
+    theme: PropTypes.string,
+    hasImage: PropTypes.bool,
+    setBroken: PropTypes.func,
+    toggled: PropTypes.bool,
+    setToggled: PropTypes.func,
+}
