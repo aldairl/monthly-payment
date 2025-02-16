@@ -7,7 +7,8 @@ const boxService = new BoxService()
 export class BoxController {
     async getAllBoxes(req: Request, res: Response): Promise<void> {
         try {
-            const boxes = await boxService.getAllBoxes();
+            const year = Number(req.query.year)
+            const boxes = await boxService.getAllBoxes(year)
             responses.success(req, res, boxes)
         } catch (error) {
             responses.error(req, res, error)

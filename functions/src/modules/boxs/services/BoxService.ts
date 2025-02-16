@@ -1,8 +1,17 @@
 import Box, { IBox } from "../models/Box";
 
 export class BoxService {
-    async getAllBoxes(): Promise<IBox[]> {
-        return await Box.find()
+    async getAllBoxes(year: number): Promise<IBox[]> {
+        let query = {}
+
+        if(year){
+            // create a range 
+            const initDate = new Date(`${year}-01-01`)
+            const endDate = new Date(`${year + 1}-01-01`)
+
+            query = { creation_date: { $gte: initDate, $lte: endDate } }
+        }
+        return await Box.find(query)
     }
 
     async getBoxById(id: string): Promise<IBox | null> {
