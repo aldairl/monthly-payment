@@ -55,7 +55,7 @@ export const List = ({ loading, error, handlerCloseBox, handlerNewBox, handlerNe
         boxes.map(({ _id, name, status, description, creation_date, close_date }) => (
           <Card key={_id} sx={{ gridColumn: "span 1", "&:hover": { boxShadow: 10 }, cursor: 'pointer' }}>
 
-            <CardContent onClick={status === 'open' ? handlerNewPayment : null}>
+            <CardContent onClick={status === 'open' ? () => handlerNewPayment(_id) : null}>
 
               <Typography color={status === 'open' ? 'success' : 'textDisabled'} gutterBottom sx={{ fontSize: 14, textAlign: 'end' }}>
                 {status === 'open' ? 'abierta' : 'cerrada'}

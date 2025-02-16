@@ -7,11 +7,11 @@ import { ConceptList } from './ConceptList'
 
 export const RegisterPayment = ({
     isNonMobile, handleFormSubmit, initialValues, checkoutSchema, handleConceptsSubmit,
-    conceptInitialValues, conceptsCheckoutSchema, conceptList, months,
+    conceptInitialValues, conceptsCheckoutSchema, conceptList, months, boxes
 }) => {
 
     return (
-        <Box>
+        <Box sx={{ padding:3 }} >
             <Card >
                 <CardContent>
                     <Formik
@@ -40,8 +40,23 @@ export const RegisterPayment = ({
                                         name="payer"
                                         error={!!touched.payer && !!errors.payer}
                                         helperText={touched.payer && errors.payer}
-                                        sx={{ gridColumn: "span 6" }}
+                                        sx={{ gridColumn: "span 3" }}
                                     />
+
+                                    <TextField
+                                        fullWidth
+                                        variant="filled"
+                                        type="text"
+                                        label="caja"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={(boxes.find( ({_id}) => _id === values.box).name)}
+                                        name="box"
+                                        error={!!touched.box && !!errors.box}
+                                        helperText={touched.box && errors.box}
+                                        sx={{ gridColumn: "span 3" }}
+                                    />
+
                                     <TextField
                                         fullWidth
                                         variant="filled"
@@ -55,19 +70,7 @@ export const RegisterPayment = ({
                                         helperText={touched.amount && errors.amount}
                                         sx={{ gridColumn: "span 6" }}
                                     />
-                                    <TextField
-                                        fullWidth
-                                        variant="filled"
-                                        type="text"
-                                        label="caja"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.box}
-                                        name="box"
-                                        error={!!touched.box && !!errors.box}
-                                        helperText={touched.box && errors.box}
-                                        sx={{ gridColumn: "span 6" }}
-                                    />
+
                                     <TextField
                                         fullWidth
                                         variant="filled"
@@ -206,6 +209,7 @@ RegisterPayment.propTypes = {
     handleConceptsSubmit: PropTypes.func,
     conceptInitialValues: PropTypes.object,
     conceptsCheckoutSchema: PropTypes.object,
+    boxes: PropTypes.array,
     conceptList: PropTypes.array,
     months: PropTypes.array,
     currentConcepts: PropTypes.array,

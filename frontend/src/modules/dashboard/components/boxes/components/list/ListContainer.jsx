@@ -3,6 +3,7 @@ import { List } from './List'
 import { useDispatch, useSelector } from 'react-redux'
 import { getBoxes } from '../../store/thunks'
 import { useNavigate } from 'react-router-dom'
+import { setBox } from '../../../payments/store/paymentSlice'
 
 export const ListContainer = () => {
   const { boxes, loading, error, years } = useSelector(state => state.box)
@@ -20,7 +21,8 @@ export const ListContainer = () => {
     console.log('cerrar caja')
   }
 
-  const handlerNewPayment = () => {
+  const handlerNewPayment = (boxId) => {
+    dispatch(setBox(boxId))
     navigate('/dash/box/new-payment')
   }
 

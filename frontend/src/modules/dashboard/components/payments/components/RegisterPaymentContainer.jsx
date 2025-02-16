@@ -22,6 +22,7 @@ export const RegisterPaymentContainer = () => {
 
     const dispatch = useDispatch()
     const { payer, box, concepts } = useSelector(state => state.payment)
+    const { boxes } = useSelector(state => state.box)
 
     const initialValues = {
         payer,
@@ -71,6 +72,7 @@ export const RegisterPaymentContainer = () => {
             conceptsCheckoutSchema={conceptsCheckoutSchema}
             conceptList={conceptList}
             months={months}
+            boxes={boxes}
         />
     )
 }
