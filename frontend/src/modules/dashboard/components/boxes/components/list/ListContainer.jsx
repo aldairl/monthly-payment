@@ -23,7 +23,7 @@ export const ListContainer = () => {
 
   const handlerNewPayment = (boxId) => {
     dispatch(setBox(boxId))
-    navigate('/dash/box/new-payment')
+    navigate('/dash/user/get-user')
   }
 
   const handleChangeYearSelected = ({ target }) => {
