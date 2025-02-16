@@ -1,0 +1,40 @@
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+    boxes: [],
+    years: [],
+    loading: false,
+    error: ''
+}
+
+export const boxSlice = createSlice({
+    name: 'box',
+    initialState,
+    reducers: {
+        setBoxes: (state, { payload }) => {
+            state.boxes = payload
+            state.loading = false
+            state.error = ''
+            state.years = payload.map(box => new Date(box.creation_date).getFullYear())
+        },
+        setYears: (state, { payload }) => {
+            state.years = payload
+            state.loading = false
+            state.error = ''
+        },
+        setLoading: (state, { payload }) => {
+            state.loading = payload
+        },
+        setError: (state, { payload }) => {
+            state.error = payload
+        },
+        cleanBox: (state) => {
+            state.boxes = []
+            state.years = []
+            state.loading = false
+            state.error = ''
+        },
+    }
+})
+
+export const { setBoxes, setYears, setLoading, setError, cleanBox } = boxSlice.actions

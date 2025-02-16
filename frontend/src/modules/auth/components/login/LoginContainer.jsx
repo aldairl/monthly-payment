@@ -27,8 +27,8 @@ export const LoginContainer = () => {
 
     const handleFormSubmit = ({ username, password }) => {
         // console.log({ username, password })
-        // dispatch(loginUser(username, password))
-        navigate('/dash/years')
+        dispatch(loginUser(username, password))
+        // navigate('/dash/years')
     }
 
     useEffect(() => {

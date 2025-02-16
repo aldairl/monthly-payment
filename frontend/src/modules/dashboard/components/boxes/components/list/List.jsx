@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types'
 import { Box, Button, Card, CardActions, CardContent, FormControl, FormHelperText, MenuItem, Select, Typography, useMediaQuery } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
+import { Loading } from '../../../../../../components/Loading'
 
-export const List = ({ handlerCloseBox, handlerNewBox, handlerNewPayment, boxes, years, handleChangeYearSelected, yearSelected }) => {
+export const List = ({ loading, error, handlerCloseBox, handlerNewBox, handlerNewPayment, boxes, years, handleChangeYearSelected, yearSelected }) => {
 
   const isNonMobile = useMediaQuery("(min-width:600px)")
 
@@ -17,8 +18,17 @@ export const List = ({ handlerCloseBox, handlerNewBox, handlerNewPayment, boxes,
         "& > div": { gridColumn: isNonMobile ? undefined : "span 8" },
       }}
     >
-      <Box sx={{ gridColumn: 'span 3', textAlign: 'end' }} >
+      <Box sx={{ gridColumn: 'span 3', textAlign: 'end', justifyContent: 'space-between', display: 'flex' }} >
+        <Typography color={error ? 'error' : 'success'} >
+          {
+            loading && <Loading />
+          }
 
+          {
+            error && error
+          }
+
+        </Typography>
         <FormControl>
           <Select
             value={yearSelected}
@@ -34,11 +44,13 @@ export const List = ({ handlerCloseBox, handlerNewBox, handlerNewPayment, boxes,
                 </MenuItem>
               ))
             }
+
           </Select>
           <FormHelperText>Filtrar por año</FormHelperText>
         </FormControl>
 
       </Box>
+
       {
         boxes.map(({ _id, name, status, description, creation_date, close_date }) => (
           <Card key={_id} sx={{ gridColumn: "span 1", "&:hover": { boxShadow: 10 }, cursor: 'pointer' }}>
@@ -53,7 +65,9 @@ export const List = ({ handlerCloseBox, handlerNewBox, handlerNewPayment, boxes,
                 {name}
               </Typography>
 
-              <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>{status === 'open' ? creation_date : close_date}</Typography>
+              <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>
+                {status === 'open' ? new Date(creation_date).toISOString().split('T')[0] : new Date(close_date).toISOString().split('T')[0]}
+              </Typography>
 
               <Typography variant="body2">
                 {description}
@@ -71,6 +85,10 @@ export const List = ({ handlerCloseBox, handlerNewBox, handlerNewPayment, boxes,
 
           </Card>
         ))
+      }
+
+      {
+        boxes.length === 0 && <Typography color='info' > No hay cajas registradas para el año {yearSelected} </Typography>
       }
 
       <Card
@@ -97,4 +115,6 @@ List.propTypes = {
   boxes: PropTypes.array,
   years: PropTypes.array,
   yearSelected: PropTypes.number,
+  loading: PropTypes.bool,
+  error: PropTypes.string,
 }

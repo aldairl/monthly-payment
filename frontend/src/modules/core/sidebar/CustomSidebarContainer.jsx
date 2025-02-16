@@ -3,12 +3,18 @@ import { menuClasses } from 'react-pro-sidebar'
 import { CustomSidebar } from "./CustomSidebar"
 import { hexToRgba, themes } from './themeSidebar'
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { logout } from '../../auth/store/authSlice'
+import { useNavigate } from 'react-router-dom'
+import { cleanBox } from '../../dashboard/components/boxes/store/boxSlice'
 
 
 export const CustomSidebarContainer = ({ theme, setBroken, hasImage, toggled, setToggled }) => {
 
     const [collapsed, setCollapsed] = useState(false)
-
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    
     const menuItemStyles = {
         root: {
             fontSize: '13px',
@@ -43,6 +49,13 @@ export const CustomSidebarContainer = ({ theme, setBroken, hasImage, toggled, se
         })
     }
 
+    const handlerLogout = () => {
+        localStorage.removeItem('authToken')
+        dispatch(cleanBox())
+        dispatch(logout())
+        navigate('/auth')
+    }
+
     return (
         <CustomSidebar
             theme={theme}
@@ -53,6 +66,7 @@ export const CustomSidebarContainer = ({ theme, setBroken, hasImage, toggled, se
             toggled={toggled}
             setToggled={setToggled}
             setBroken={setBroken}
+            handlerLogout={handlerLogout}
         />
     )
 }

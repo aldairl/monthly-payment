@@ -1,19 +1,17 @@
 import PropTypes from 'prop-types'
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar'
 import { hexToRgba, themes } from './themeSidebar'
-import { Badge, Box, IconButton, Typography } from '@mui/material'
+import { Box, IconButton, Typography } from '@mui/material'
 import BarChartIcon from '@mui/icons-material/BarChart'
 import BrushIcon from '@mui/icons-material/Brush'
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import DiamondIcon from '@mui/icons-material/Diamond'
-import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
-import MailIcon from '@mui/icons-material/Mail'
-import MenuBookIcon from '@mui/icons-material/MenuBook'
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined"
 import PublicIcon from '@mui/icons-material/Public'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import LogoutIcon from '@mui/icons-material/Logout'
+import { Link } from 'react-router-dom'
 
-export const CustomSidebar = ({ collapsed, toggled, hasImage, theme, menuItemStyles, setToggled, setBroken, setCollapsed }) => {
+export const CustomSidebar = ({ collapsed, toggled, hasImage, theme, menuItemStyles, setToggled, setBroken, setCollapsed, handlerLogout }) => {
   return (
     <Sidebar
       collapsed={collapsed}
@@ -34,7 +32,7 @@ export const CustomSidebar = ({ collapsed, toggled, hasImage, theme, menuItemSty
 
           <Menu menuItemStyles={menuItemStyles}>
 
-            <MenuItem onClick={() => setCollapsed(prev => toggled ? false : !prev )} style={{ marginTop: 10, marginBottom: 10 }} >
+            <MenuItem onClick={() => setCollapsed(prev => toggled ? false : !prev)} style={{ marginTop: 10, marginBottom: 10 }} >
               <Box>
                 {collapsed ?
                   <IconButton color='primary' >
@@ -61,15 +59,10 @@ export const CustomSidebar = ({ collapsed, toggled, hasImage, theme, menuItemSty
             </div>
 
             <SubMenu
-              label="Charts"
+              label="Cajas"
               icon={<BarChartIcon />}
-              suffix={
-                <Badge shape="circle" badgeContent={6} color="primary" variant="danger">
-                  <MailIcon color="action" />
-                </Badge>
-              }
             >
-              <MenuItem> Pie charts</MenuItem>
+              <MenuItem component={ <Link to='/dash/box/list' /> } > lista de cajas</MenuItem>
               <MenuItem> Line charts</MenuItem>
               <MenuItem> Bar charts</MenuItem>
             </SubMenu>
@@ -98,7 +91,7 @@ export const CustomSidebar = ({ collapsed, toggled, hasImage, theme, menuItemSty
             </SubMenu>
 
             <SubMenu label="E-commerce" icon={<ShoppingCartIcon />}>
-              <MenuItem> Product</MenuItem>
+              <MenuItem component={<Link to='/' />} > Product</MenuItem>
               <MenuItem> Orders</MenuItem>
               <MenuItem> Credit card</MenuItem>
             </SubMenu>
@@ -111,17 +104,13 @@ export const CustomSidebar = ({ collapsed, toggled, hasImage, theme, menuItemSty
               fontWeight={600}
               style={{ opacity: collapsed ? 0 : 0.7, letterSpacing: '0.5px' }}
             >
-              Extra
+              Auth
             </Typography>
           </div>
 
           <Menu menuItemStyles={menuItemStyles}>
-            <MenuItem icon={<CalendarMonthIcon />} suffix={<Badge variant="success">New</Badge>}>
-              Calendar
-            </MenuItem>
-            <MenuItem icon={<MenuBookIcon />}>Documentation</MenuItem>
-            <MenuItem disabled icon={<HomeRepairServiceIcon />}>
-              Examples
+            <MenuItem icon={<LogoutIcon />} onClick={handlerLogout} >
+              Cerrar sesión
             </MenuItem>
           </Menu>
         </div>
@@ -139,5 +128,6 @@ CustomSidebar.propTypes = {
   setToggled: PropTypes.func,
   setBroken: PropTypes.func,
   setCollapsed: PropTypes.func,
+  handlerLogout: PropTypes.func,
   menuItemStyles: PropTypes.object,
 }

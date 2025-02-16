@@ -1,13 +1,14 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { List } from './List'
+import { useDispatch, useSelector } from 'react-redux'
+import { getBoxes } from '../../store/thunks'
+import { useNavigate } from 'react-router-dom'
 
 export const ListContainer = () => {
-  const boxes = [
-    { _id: "123456", name: "caja enero", status: 'close', description: "Almaena los pagos de enero 2025", creation_date: '15-02-2025', close_date: '28-01-2025' },
-    { _id: "12345678", name: "caja febrero", status: 'open', description: "Almaena los pagos de febrero 2025", creation_date: '15-02-2025', close_date: '' },
-  ]
-
-  const years = [2025, 2024]
+  const { boxes, loading, error, years } = useSelector(state => state.box)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const [ boxLoaded, setBoxLoaded ] = useState(false)
 
   const [yearSelected, setYearSelected] = useState(new Date().getFullYear())
 
@@ -20,13 +21,22 @@ export const ListContainer = () => {
   }
 
   const handlerNewPayment = () => {
-    console.log('Nuevo pago')
+    navigate('/dash/box/new-payment')
   }
 
   const handleChangeYearSelected = ({ target }) => {
-    console.log('seleccionar año', target.value)
     setYearSelected(target.value)
+    console.log('seleccionar año', target.value)
   }
+
+  useEffect(() => {
+    if (boxes.length === 0 && !boxLoaded) {
+      dispatch(getBoxes(yearSelected))
+      setBoxLoaded(true)
+    }
+
+  }, [yearSelected, boxes, dispatch, boxLoaded])
+
 
   return (
     <List
@@ -37,6 +47,8 @@ export const ListContainer = () => {
       yearSelected={yearSelected}
       handlerNewPayment={handlerNewPayment}
       years={years}
+      loading={loading}
+      error={error}
     />
   )
 }
