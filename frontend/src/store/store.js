@@ -5,6 +5,7 @@ import { paymentSlice } from "../modules/dashboard/components/payments/store/pay
 import { boxSlice } from "../modules/dashboard/components/boxes/store/boxSlice";
 import storage from "redux-persist/lib/storage"
 import { persistReducer, persistStore } from "redux-persist"
+import { beneficiarySlice } from "../modules/dashboard/components/user/storage/beneficiarySlice";
 
 const persistAuthConfig = { key: "root", storage, }
 const persistedAuthReducer = persistReducer(persistAuthConfig, authSlice.reducer)
@@ -14,7 +15,8 @@ export const store = configureStore({
         auth: persistedAuthReducer,
         dash: dashSlice.reducer,
         payment: paymentSlice.reducer,
-        box: boxSlice.reducer
+        box: boxSlice.reducer,
+        beneficiary: beneficiarySlice.reducer
     }
 })
 

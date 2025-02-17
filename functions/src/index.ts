@@ -9,6 +9,7 @@ import expensesRouter from './modules/payments/routes/expenseRouter'
 import conceptsRouter from './modules/payments/routes/conceptRouter'
 import monthRouter from './modules/payments/routes/monthRouter'
 import yearRouter from './modules/payments/routes/YearRouter'
+import beneficiaryRouter from './modules/beneficiaries/routes/BeneficiaryRouter'
 
 connectDatabase()
 
@@ -23,5 +24,6 @@ app.use("/expenses", expensesRouter)
 app.use("/concepts", conceptsRouter)
 app.use("/months", monthRouter)
 app.use("/years", yearRouter)
+app.use("/beneficiaries", beneficiaryRouter)
 
 export const api = https.onRequest(app)

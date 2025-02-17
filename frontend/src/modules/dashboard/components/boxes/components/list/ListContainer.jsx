@@ -11,7 +11,7 @@ export const ListContainer = () => {
   const navigate = useNavigate()
   const [ boxLoaded, setBoxLoaded ] = useState(false)
 
-  const [yearSelected, setYearSelected] = useState(new Date().getFullYear())
+  const [yearSelected, setYearSelected] = useState('')
 
   const handlerCloseBox = () => {
     console.log('cerrar caja')

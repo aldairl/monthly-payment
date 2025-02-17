@@ -3,12 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     loading: false,
     error: '',
-    users: [],
-    userSelected: '',   
+    beneficiaries: [],
+    beneficiarySelected: '',   
 }
 
-export const userSlice = createSlice({
-    name: 'user',
+export const beneficiarySlice = createSlice({
+    name: 'beneficiary',
     initialState,
     reducers: {
         setLoading: (state, { payload }) => {
@@ -18,15 +18,16 @@ export const userSlice = createSlice({
             state.error = payload
         },
         clean: () => initialState,
-        setUserSelected: (state, { payload }) => {
-            state.userSelected = payload
+
+        setBeneficiarySelected: (state, { payload }) => {
+            state.beneficiarySelected = payload
         },
-        setUsers: (state, { payload }) => {
-            state.users = payload
+        setBeneficiaries: (state, { payload }) => {
+            state.beneficiaries = payload
             state.error = ''
             state.loading = false
         }
     }
 })
 
-export const { setLoading, setError, clean, setUserSelected, setUsers } = userSlice.actions
+export const { setLoading, setError, clean, setBeneficiarySelected, setBeneficiaries } = beneficiarySlice.actions

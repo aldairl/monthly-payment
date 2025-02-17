@@ -32,7 +32,7 @@ export const Header = ({ theme, ToggleTheme, hasImage, sidebarCollapsed, setTogg
               <MenuOutlinedIcon />
             </IconButton>
           )}
-          Años
+          
         </Typography>
 
       </Box>

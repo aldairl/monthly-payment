@@ -1,26 +1,17 @@
 import { VITE_API_URL } from "../../../../../config/variables"
 import { fetchData } from "../../../../../utils/fetch-request"
-import { setError, setLoading, setUsers, setUserSelected } from "./userSlice"
+import { setBeneficiaries, setBeneficiarySelected, setError, setLoading,  } from "./beneficiarySlice"
 
-export const searchUser = (identification) => {
+export const getBeneficiaryByDNI = (identification) => {
     return async (dispatch) => {
         dispatch(setLoading(true))
 
-        const url = `${VITE_API_URL}/users/search`
-
-        const body = {
-            identification
-        }
-
-        const options = {
-            method: 'POST',
-            body
-        }
+        const url = `${VITE_API_URL}/beneficiaries/get-by-dni/${identification}`
 
         try {
-            const { body } = await fetchData(url, options)
+            const { body } = await fetchData(url)
             // set toke in localstorage
-            dispatch(setUsers(body))
+            dispatch(setBeneficiaries(body))
 
         } catch (error) {
             dispatch(setError(error.message || String(error)))
@@ -30,11 +21,11 @@ export const searchUser = (identification) => {
     }
 }
 
-export const addUser = ({ name, lastname, identification, birthdate, temple, cellphone }) => {
+export const addBeneficiary = ({ name, lastname, identification, birthdate, temple, cellphone }) => {
     return async (dispatch) => {
         dispatch(setLoading(true))
 
-        const url = `${VITE_API_URL}/users/create`
+        const url = `${VITE_API_URL}/beneficiaries`
 
         const body = {
             name,
@@ -52,7 +43,7 @@ export const addUser = ({ name, lastname, identification, birthdate, temple, cel
 
         try {
             const { body } = await fetchData(url, options)
-            dispatch(setUserSelected(body))
+            dispatch(setBeneficiarySelected(body))
 
         } catch (error) {
             dispatch(setError(error.message || String(error)))
