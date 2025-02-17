@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux'
 import { logout } from '../../auth/store/authSlice'
 import { useNavigate } from 'react-router-dom'
 import { cleanBox } from '../../dashboard/components/boxes/store/boxSlice'
+import { clean } from '../../dashboard/components/user/storage/beneficiarySlice'
 
 
 export const CustomSidebarContainer = ({ theme, setBroken, hasImage, toggled, setToggled }) => {
@@ -52,6 +53,7 @@ export const CustomSidebarContainer = ({ theme, setBroken, hasImage, toggled, se
     const handlerLogout = () => {
         localStorage.removeItem('authToken')
         dispatch(cleanBox())
+        dispatch(clean())
         dispatch(logout())
         navigate('/auth')
     }

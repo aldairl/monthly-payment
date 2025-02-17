@@ -22,6 +22,7 @@ export const RegisterPaymentContainer = () => {
 
     const dispatch = useDispatch()
     const { payer, box, concepts } = useSelector(state => state.payment)
+    const { beneficiarySelected } = useSelector(state => state.beneficiary)
     const { boxes } = useSelector(state => state.box)
 
     const initialValues = {
@@ -52,8 +53,6 @@ export const RegisterPaymentContainer = () => {
 
     const handleFormSubmit = (values) => {
         console.log(values)
-        // dispatch(loginUser(username, password))
-        // navigate('/dash/years')
     }
 
     const handleConceptsSubmit = (values) => {
@@ -73,6 +72,7 @@ export const RegisterPaymentContainer = () => {
             conceptList={conceptList}
             months={months}
             boxes={boxes}
+            beneficiarySelected={beneficiarySelected}
         />
     )
 }

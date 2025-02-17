@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AddUser } from './AddUser'
 import * as yup from "yup"
 import { addBeneficiary } from '../../storage/beneficiaryThunks'
+import { useNavigate } from 'react-router-dom'
+import { setPayer } from '../../../payments/store/paymentSlice'
 
 const checkoutSchema = yup.object().shape({
   name: yup.string().required("required"),
@@ -24,11 +26,17 @@ const initialValues = {
 export const AddUserContainer = () => {
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { loading, error, beneficiarySelected } = useSelector(state => state.beneficiary)
 
   const handleFormSubmit = (values) => {
     console.log(values)
     dispatch(addBeneficiary(values))
+  }
+
+  const goToAddPayment = () => {
+    dispatch( setPayer(beneficiarySelected._id) )
+    navigate('/dash/box/new-payment')
   }
 
   return (
@@ -39,6 +47,7 @@ export const AddUserContainer = () => {
       loading={loading}
       error={error}
       beneficiarySelected={beneficiarySelected}
+      goToAddPayment={goToAddPayment}
     />
   )
 }

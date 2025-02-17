@@ -3,7 +3,7 @@ import { Box, Button, Card, CardContent, TextField, Typography, useMediaQuery } 
 import { Form, Formik } from "formik"
 import { Loading } from '../../../../../../components/Loading'
 
-export const AddUser = ({ handleFormSubmit, initialValues, checkoutSchema, loading, error, beneficiarySelected }) => {
+export const AddUser = ({ handleFormSubmit, initialValues, checkoutSchema, loading, error, beneficiarySelected, goToAddPayment }) => {
   const isNonMobile = useMediaQuery("(min-width:600px)")
 
   return (
@@ -127,7 +127,8 @@ export const AddUser = ({ handleFormSubmit, initialValues, checkoutSchema, loadi
 
           {
             beneficiarySelected && <Box sx={{ marginTop: 2 }}>
-              <Typography color='success' variant='h5'> Beneficiario {beneficiarySelected.name} se ha guardado correctamente!</Typography>
+              <Typography color='success' variant='h5' marginBottom={1}> Beneficiario {beneficiarySelected.name} se ha guardado correctamente!</Typography>
+              <Button color='info' variant='outlined' onClick={goToAddPayment} >Registrar pago</Button>
             </Box>
           }
 
@@ -140,6 +141,7 @@ export const AddUser = ({ handleFormSubmit, initialValues, checkoutSchema, loadi
 AddUser.propTypes = {
   isNonMobile: PropTypes.bool,
   handleFormSubmit: PropTypes.func,
+  goToAddPayment: PropTypes.func,
   initialValues: PropTypes.object,
   checkoutSchema: PropTypes.object,
   beneficiarySelected: PropTypes.object,

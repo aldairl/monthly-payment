@@ -4,8 +4,8 @@ import { Form, Formik } from "formik"
 
 export const Login = ({ isNonMobile, handleFormSubmit, initialValues, checkoutSchema, }) => {
     return (
-        <Box>
-            <Card >
+        <Box textAlign='center' display='flex' justifyContent='center' marginTop={8} >
+            <Card sx={{ maxWidth: 360, minWidth: 360 }} >
                 <CardContent>
                     <h1>Bienvenido</h1>
                     <h3>Iniciar sesión</h3>
@@ -26,7 +26,7 @@ export const Login = ({ isNonMobile, handleFormSubmit, initialValues, checkoutSc
                                 >
                                     <TextField
                                         fullWidth
-                                        variant="filled"
+                                        variant="outlined"
                                         type="text"
                                         label="Usuario"
                                         onBlur={handleBlur}
@@ -39,7 +39,7 @@ export const Login = ({ isNonMobile, handleFormSubmit, initialValues, checkoutSc
                                     />
                                     <TextField
                                         fullWidth
-                                        variant="filled"
+                                        variant="outlined"
                                         type="password"
                                         label="Contraseña"
                                         onBlur={handleBlur}
@@ -53,7 +53,7 @@ export const Login = ({ isNonMobile, handleFormSubmit, initialValues, checkoutSc
                                 </Box>
 
                                 <Box display="flex" justifyContent="center" mt="20px">
-                                    <Button type="submit" color="secondary" variant="contained">
+                                    <Button type="submit" color="info" variant="contained">
                                         Aceptar
                                     </Button>
                                 </Box>

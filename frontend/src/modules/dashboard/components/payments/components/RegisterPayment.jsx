@@ -7,7 +7,7 @@ import { ConceptList } from './ConceptList'
 
 export const RegisterPayment = ({
     isNonMobile, handleFormSubmit, initialValues, checkoutSchema, handleConceptsSubmit,
-    conceptInitialValues, conceptsCheckoutSchema, conceptList, months, boxes
+    conceptInitialValues, conceptsCheckoutSchema, conceptList, months, boxes, beneficiarySelected
 }) => {
 
     return (
@@ -31,12 +31,12 @@ export const RegisterPayment = ({
                                 >
                                     <TextField
                                         fullWidth
-                                        variant="filled"
+                                        variant="outlined"
                                         type="text"
                                         label="Nombre"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        value={values.payer}
+                                        value={beneficiarySelected.name}
                                         name="payer"
                                         error={!!touched.payer && !!errors.payer}
                                         helperText={touched.payer && errors.payer}
@@ -45,7 +45,7 @@ export const RegisterPayment = ({
 
                                     <TextField
                                         fullWidth
-                                        variant="filled"
+                                        variant="outlined"
                                         type="text"
                                         label="caja"
                                         onBlur={handleBlur}
@@ -59,7 +59,7 @@ export const RegisterPayment = ({
 
                                     <TextField
                                         fullWidth
-                                        variant="filled"
+                                        variant="outlined"
                                         type="number"
                                         label="Valor"
                                         onBlur={handleBlur}
@@ -73,7 +73,7 @@ export const RegisterPayment = ({
 
                                     <TextField
                                         fullWidth
-                                        variant="filled"
+                                        variant="outlined"
                                         type="text"
                                         label="Tipo de pago"
                                         onBlur={handleBlur}
@@ -128,7 +128,7 @@ export const RegisterPayment = ({
 
                                     <TextField
                                         fullWidth
-                                        variant="filled"
+                                        variant="outlined"
                                         type="text"
                                         label="Concepto"
                                         onBlur={handleBlur}
@@ -151,7 +151,7 @@ export const RegisterPayment = ({
 
                                     <TextField
                                         fullWidth
-                                        variant="filled"
+                                        variant="outlined"
                                         type="number"
                                         label="Valor"
                                         onBlur={handleBlur}
@@ -165,7 +165,7 @@ export const RegisterPayment = ({
 
                                     <TextField
                                         fullWidth
-                                        variant="filled"
+                                        variant="outlined"
                                         type="text"
                                         label="Mes"
                                         onBlur={handleBlur}
@@ -209,6 +209,7 @@ RegisterPayment.propTypes = {
     handleConceptsSubmit: PropTypes.func,
     conceptInitialValues: PropTypes.object,
     conceptsCheckoutSchema: PropTypes.object,
+    beneficiarySelected: PropTypes.object,
     boxes: PropTypes.array,
     conceptList: PropTypes.array,
     months: PropTypes.array,
