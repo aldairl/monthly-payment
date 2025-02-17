@@ -26,17 +26,18 @@ export const GetUser = ({ onSearch, beneficiaries, identification, loading, erro
 
             {
                 beneficiaries.length > 0 &&
-                beneficiaries.map(({ name, identification }) => (
-                    <>
-                        <Divider sx={{ gridColumn: "span 3" }}>Beneficiario encontrado</Divider>
-                        <Card key={identification} >
-                            <CardContent onClick={() => selectBeneficiary(identification)}>
-                                {name}
-                                {identification}
-                            </CardContent>
-                        </Card>
-                    </>
-                ))
+                <>
+                    <Divider sx={{ gridColumn: "span 3" }} >Beneficiario encontrado</Divider>
+
+                    {beneficiaries.map((beneficiary) => (
+                    <Card key={beneficiary.identification} >
+                        <CardContent onClick={() => selectBeneficiary(beneficiary)}>
+                            {beneficiary.name}
+                            {beneficiary.identification}
+                        </CardContent>
+                    </Card>
+                    ))}
+                </>
 
             }
 

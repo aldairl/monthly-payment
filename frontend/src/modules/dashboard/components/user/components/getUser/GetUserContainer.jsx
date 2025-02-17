@@ -5,6 +5,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { setBeneficiarySelected } from "../../storage/beneficiarySlice"
 import { useEffect } from "react"
+import { setPayer } from "../../../payments/store/paymentSlice"
 
 export const GetUserContainer = () => {
 
@@ -24,12 +25,14 @@ export const GetUserContainer = () => {
         navigate('/dash/user/add-new')
     }
 
-    const selectBeneficiary = (id) => {
-        dispatch(setBeneficiarySelected(id))
+    const selectBeneficiary = (beneficiary) => {
+        dispatch(setBeneficiarySelected(beneficiary))
+        dispatch( setPayer(beneficiary._id) )
     }
 
     useEffect(() => {
         if (beneficiarySelected) {
+            
             navigate('/dash/box/new-payment')
         }
     }, [beneficiarySelected, navigate])
