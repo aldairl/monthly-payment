@@ -1,17 +1,16 @@
 import PropTypes from 'prop-types'
-import { Box, Button, TextField, Card, CardContent, MenuItem } from "@mui/material"
+import { Box, Button, TextField, Card, CardContent, MenuItem, Typography } from "@mui/material"
+import DeleteIcon from '@mui/icons-material/Delete';
 import Divider from '@mui/material/Divider'
-import { Form, Formik } from "formik"
-import { ConceptList } from './ConceptList'
+import { FieldArray, Form, Formik } from "formik"
 
 
 export const RegisterPayment = ({
-    isNonMobile, handleFormSubmit, initialValues, checkoutSchema, handleConceptsSubmit,
-    conceptInitialValues, conceptsCheckoutSchema, conceptList, months, boxes, beneficiarySelected
+    isNonMobile, handleFormSubmit, initialValues, checkoutSchema, conceptList, months, boxes, beneficiarySelected
 }) => {
 
     return (
-        <Box sx={{ padding:3 }} >
+        <Box sx={{ padding: 3 }} >
             <Card >
                 <CardContent>
                     <Formik
@@ -41,6 +40,7 @@ export const RegisterPayment = ({
                                         error={!!touched.payer && !!errors.payer}
                                         helperText={touched.payer && errors.payer}
                                         sx={{ gridColumn: "span 3" }}
+                                        disabled
                                     />
 
                                     <TextField
@@ -50,25 +50,12 @@ export const RegisterPayment = ({
                                         label="caja"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        value={(boxes.find( ({_id}) => _id === values.box).name)}
+                                        value={(boxes.find(({ _id }) => _id === values.box)?.name)}
                                         name="box"
                                         error={!!touched.box && !!errors.box}
                                         helperText={touched.box && errors.box}
                                         sx={{ gridColumn: "span 3" }}
-                                    />
-
-                                    <TextField
-                                        fullWidth
-                                        variant="outlined"
-                                        type="number"
-                                        label="Valor"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.amount}
-                                        name="amount"
-                                        error={!!touched.amount && !!errors.amount}
-                                        helperText={touched.amount && errors.amount}
-                                        sx={{ gridColumn: "span 6" }}
+                                        disabled
                                     />
 
                                     <TextField
@@ -96,105 +83,136 @@ export const RegisterPayment = ({
                                     </TextField>
                                 </Box>
 
-                                <Box display="flex" justifyContent="center" mt="20px">
-                                    <Button type="submit" color="secondary" variant="contained">
-                                        Guardar pago
-                                    </Button>
-                                </Box>
+                                <Divider sx={{ gridColumn: "span 6", margin: 3 }}>Conceptos del pago</Divider>
+
+                                <FieldArray name="concepts">
+                                    {({ remove, push }) => (
+                                        <>
+                                            {
+                                                values.concepts.map((concept, index) => (
+                                                    <Box
+                                                        key={index}
+                                                        display='grid'
+                                                        gap='30px'
+                                                        gridTemplateColumns="repeat(7, minmax(0, 1fr))"
+                                                        alignItems='center'
+                                                        sx={{
+                                                            "& > div": { gridColumn: isNonMobile ? undefined : "span 7" },
+                                                            marginTop: 2,
+                                                            gridColumn: "span 7"
+                                                        }}
+
+                                                    >
+                                                        <TextField
+                                                            type="text"
+                                                            label="Concepto"
+                                                            name={`concepts.${index}.concept_id`}
+                                                            onChange={handleChange}
+                                                            value={values.concepts[index]?.concept_id || ''}
+                                                            select
+                                                            sx={{
+                                                                gridColumn: "span 2",
+                                                                '& .MuiInputBase-input': {
+                                                                    padding: 1
+                                                                }
+                                                            }}
+                                                        >
+                                                            {
+                                                                conceptList.map(({ name, _id }) => (
+                                                                    <MenuItem key={_id} value={_id} >
+                                                                        {name}
+                                                                    </MenuItem>
+                                                                ))
+                                                            }
+                                                        </TextField>
+
+                                                        <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            type="text"
+                                                            label="Mes"
+                                                            onChange={handleChange}
+                                                            name={`concepts.${index}.month_id`}
+                                                            value={values.concepts[index]?.month_id || ''}
+                                                            select
+                                                            sx={{
+                                                                gridColumn: "span 2",
+                                                                '& .MuiInputBase-input': {
+                                                                    padding: 1,
+                                                                }
+                                                            }}
+                                                        >
+                                                            {
+                                                                months.map(({ _id, name }, index) => (
+                                                                    <MenuItem key={_id} value={_id} selected={(index === 0)} >
+                                                                        {name}
+                                                                    </MenuItem>
+                                                                ))
+                                                            }
+                                                        </TextField>
+
+                                                        <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            type="number"
+                                                            label="Valor"
+                                                            onChange={handleChange}
+                                                            name={`concepts.${index}.amount`}
+                                                            value={values.concepts[index]?.amount || ''}
+                                                            sx={{
+                                                                gridColumn: "span 2",
+                                                                '& .MuiInputBase-input': {
+                                                                    // paddingTop: '10px',
+                                                                    height: '8px'
+                                                                }
+                                                            }}
+                                                        />
+                                                        <Box display="flex" justifyContent="center">
+
+                                                            <Button
+                                                                sx={{ gridColumn: "span 1", }}
+                                                                color='error'
+                                                                onClick={() => remove(index)}
+                                                            >
+                                                                Eliminar <DeleteIcon />
+                                                            </Button>
+                                                        </Box>
+
+                                                    </Box>
+                                                ))
+                                            }
+
+                                            <Box display="flex" justifyContent="center" mt="15px">
+
+                                                <Button
+                                                    variant='outlined'
+                                                    className="secondary"
+                                                    onClick={() => push({ concept_id: conceptList[0]['_id'] || '', amount: 30000, month_id: months[0]._id || '' })}
+                                                >
+                                                    Agregar concepto
+                                                </Button>
+                                            </Box>
+                                        </>
+
+                                    )}
+                                </FieldArray>
+
+                                {
+                                    values.concepts.length > 0 &&
+
+                                    <Box display="flex" justifyContent="space-between" mt="20px">
+
+                                        <Typography variant='h3' color='success' > Total pago $ {values.concepts.reduce( (total, current ) => total + current.amount, 0 )} </Typography>
+                                        <Button type="submit" color="success" variant="contained">
+                                            Guardar pago
+                                        </Button>
+                                    </Box>
+                                }
+
                             </Form>
                         )}
                     </Formik>
 
-                    <Formik
-                        onSubmit={handleConceptsSubmit}
-                        initialValues={conceptInitialValues}
-                        validationSchema={conceptsCheckoutSchema}
-                    >
-
-                        {({ values, errors, touched, handleBlur, handleChange, handleSubmit }) => (
-                            <Form onSubmit={handleSubmit} >
-                                <Box
-                                    marginTop={5}
-                                    display="grid"
-                                    gap="30px"
-                                    gridTemplateColumns="repeat(6, minmax(0, 1fr))"
-                                    sx={{
-                                        "& > div": { gridColumn: isNonMobile ? undefined : "span 8" },
-                                    }}
-                                >
-                                    <Divider sx={{ gridColumn: "span 6" }}>Conceptos del pago</Divider>
-
-                                    <ConceptList sx={{ gridColumn: "span 6" }} conceptList={conceptList} months={months} />
-
-                                    <TextField
-                                        fullWidth
-                                        variant="outlined"
-                                        type="text"
-                                        label="Concepto"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.concept_id}
-                                        name="concept_id"
-                                        error={!!touched.concept_id && !!errors.concept_id}
-                                        helperText={touched.concept_id && errors.concept_id}
-                                        sx={{ gridColumn: "span 2" }}
-                                        select
-                                    >
-                                        {
-                                            conceptList.map(({ name, _id }) => (
-                                                <MenuItem key={_id} value={_id} >
-                                                    {name}
-                                                </MenuItem>
-                                            ))
-                                        }
-                                    </TextField>
-
-                                    <TextField
-                                        fullWidth
-                                        variant="outlined"
-                                        type="number"
-                                        label="Valor"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.amount}
-                                        name="amount"
-                                        error={!!touched.amount && !!errors.amount}
-                                        helperText={touched.amount && errors.amount}
-                                        sx={{ gridColumn: "span 2" }}
-                                    />
-
-                                    <TextField
-                                        fullWidth
-                                        variant="outlined"
-                                        type="text"
-                                        label="Mes"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.month_id}
-                                        name="month_id"
-                                        error={!!touched.month_id && !!errors.month_id}
-                                        helperText={touched.month_id && errors.month_id}
-                                        sx={{ gridColumn: "span 2" }}
-                                        select
-                                    >
-                                        {
-                                            months.map(({ _id, name }) => (
-                                                <MenuItem key={_id} value={_id} >
-                                                    {name}
-                                                </MenuItem>
-                                            ))
-                                        }
-                                    </TextField>
-
-                                </Box>
-                                <Box display="flex" justifyContent="center" mt="20px">
-                                    <Button type="submit" color="secondary" variant="contained">
-                                        Agregar nuevo concepto
-                                    </Button>
-                                </Box>
-                            </Form>
-                        )}
-                    </Formik>
                 </CardContent>
             </Card>
         </Box >

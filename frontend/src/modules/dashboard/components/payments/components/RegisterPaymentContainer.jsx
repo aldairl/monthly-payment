@@ -7,7 +7,7 @@ import { addConcept } from "../store/paymentSlice"
 
 const checkoutSchema = yup.object().shape({
     payer: yup.string().required("required"),
-    amount: yup.number().required("required"),
+    // amount: yup.number().required("required"),
     box: yup.string().required("required"),
     type: yup.string().required("required"),
 })
@@ -21,16 +21,15 @@ const conceptsCheckoutSchema = yup.object().shape({
 export const RegisterPaymentContainer = () => {
 
     const dispatch = useDispatch()
-    const { payer, box, concepts } = useSelector(state => state.payment)
+    const { payer, box } = useSelector(state => state.payment)
     const { beneficiarySelected } = useSelector(state => state.beneficiary)
     const { boxes } = useSelector(state => state.box)
 
     const initialValues = {
         payer,
-        amount: '',
         box,
         type: 'income',
-        concepts
+        concepts: []
     }
 
     const conceptInitialValues = {
