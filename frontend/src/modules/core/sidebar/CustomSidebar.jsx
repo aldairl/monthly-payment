@@ -63,13 +63,13 @@ export const CustomSidebar = ({ collapsed, toggled, hasImage, theme, menuItemSty
               icon={<BarChartIcon />}
             >
               <MenuItem component={ <Link to='/dash/box/list' /> } > lista de cajas</MenuItem>
-              <MenuItem> Line charts</MenuItem>
+              <MenuItem> Crear caja</MenuItem>
               <MenuItem> Bar charts</MenuItem>
             </SubMenu>
 
             <SubMenu label="Conceptos" icon={<PublicIcon />}>
+              <MenuItem component={ <Link to='/dash/concepts/create' /> }> crear concepto</MenuItem>
               <MenuItem> lista de conceptos</MenuItem>
-              <MenuItem> crear concepto</MenuItem>
             </SubMenu>
 
             <SubMenu label="Theme" icon={<BrushIcon />}>

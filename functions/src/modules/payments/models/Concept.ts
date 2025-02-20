@@ -9,7 +9,8 @@ export interface IConcept extends Document {
 const ConceptSchema: Schema<IConcept> = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     description: {
         type: String,

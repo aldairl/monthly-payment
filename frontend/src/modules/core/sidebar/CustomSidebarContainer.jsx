@@ -8,6 +8,7 @@ import { logout } from '../../auth/store/authSlice'
 import { useNavigate } from 'react-router-dom'
 import { cleanBox } from '../../dashboard/components/boxes/store/boxSlice'
 import { clean } from '../../dashboard/components/user/storage/beneficiarySlice'
+import { cleanDash } from '../../dashboard/store/dashSlice'
 
 
 export const CustomSidebarContainer = ({ theme, setBroken, hasImage, toggled, setToggled }) => {
@@ -55,6 +56,7 @@ export const CustomSidebarContainer = ({ theme, setBroken, hasImage, toggled, se
         dispatch(cleanBox())
         dispatch(clean())
         dispatch(logout())
+        dispatch(cleanDash())
         navigate('/auth')
     }
 

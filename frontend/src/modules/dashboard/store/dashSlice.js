@@ -2,7 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     loading: false,
-    error: ''
+    error: '',
+    conceptList: [],
+    message: '',
 }
 
 export const dashSlice = createSlice({
@@ -15,11 +17,31 @@ export const dashSlice = createSlice({
         setError: (state, { payload }) => {
             state.error = payload
         },
-        clean: (state) => {
-            state.loading = ''
+        setMessage: (state, { payload }) => {
+            state.message = payload
+        },
+
+        cleanDash: () => initialState,
+
+        cleanDashVariables: (state) => {
+            state.loading = false
             state.error = ''
+            state.message = ''
+        },
+
+        setConceptList: (state, { payload }) => {
+            state.conceptList = payload
+            state.loading = false
+            state.error = ''
+        },
+
+        addConceptList: (state, { payload }) => {
+            state.conceptList = [...state.conceptList, payload]
+            state.loading = false
+            state.error = ''
+            state.message = 'Concepto agregado correctamente'
         },
     }
 })
 
-export const {setLoading, setError, clean } = dashSlice.actions
+export const { setLoading, setError, cleanDash, setConceptList, addConceptList, cleanDashVariables } = dashSlice.actions
