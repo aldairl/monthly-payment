@@ -69,7 +69,7 @@ export const CustomSidebar = ({ collapsed, toggled, hasImage, theme, menuItemSty
 
             <SubMenu label="Conceptos" icon={<PublicIcon />}>
               <MenuItem component={ <Link to='/dash/concepts/create' /> }> crear concepto</MenuItem>
-              <MenuItem> lista de conceptos</MenuItem>
+              <MenuItem component={ <Link to='/dash/concepts/list' /> }> lista de conceptos</MenuItem>
             </SubMenu>
 
             <SubMenu label="Theme" icon={<BrushIcon />}>
