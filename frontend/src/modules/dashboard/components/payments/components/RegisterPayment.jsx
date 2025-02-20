@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Box, Button, TextField, Card, CardContent, MenuItem, Typography } from "@mui/material"
+import { Box, Button, TextField, Card, CardContent, MenuItem, Typography, useMediaQuery } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete';
 import Divider from '@mui/material/Divider'
 import { FieldArray, Form, Formik } from "formik"
@@ -7,9 +7,9 @@ import { Loading } from '../../../../../components/Loading';
 
 
 export const RegisterPayment = ({
-    isNonMobile, handleFormSubmit, initialValues, checkoutSchema, conceptList, months, boxes, beneficiarySelected, loading
+    handleFormSubmit, initialValues, checkoutSchema, conceptList, months, boxes, beneficiarySelected, loading
 }) => {
-
+    const isNonMobile = useMediaQuery("(min-width:600px)")
     return (
         <Box sx={{ padding: 3 }} >
             <Card >
@@ -221,7 +221,6 @@ export const RegisterPayment = ({
 }
 
 RegisterPayment.propTypes = {
-    isNonMobile: PropTypes.bool,
     handleFormSubmit: PropTypes.func,
     initialValues: PropTypes.object,
     checkoutSchema: PropTypes.object,

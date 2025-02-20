@@ -1,8 +1,9 @@
 import { RegisterPayment } from "./RegisterPayment"
-import useMediaQuery from "@mui/material/useMediaQuery"
 import { useDispatch, useSelector } from "react-redux"
 import * as yup from "yup"
 import { MONTHS } from "../utils/months"
+import { useEffect } from "react"
+import { getConceptList } from "../../../store/dashThunks"
 
 
 const checkoutSchema = yup.object().shape({
@@ -17,6 +18,7 @@ export const RegisterPaymentContainer = () => {
     const dispatch = useDispatch()
     const { payer, box, loading } = useSelector(state => state.payment)
     const { beneficiarySelected } = useSelector(state => state.beneficiary)
+    const { conceptList } = useSelector(state => state.dash)
     const { boxes } = useSelector(state => state.box)
 
     const initialValues = {
@@ -26,20 +28,20 @@ export const RegisterPaymentContainer = () => {
         concepts: []
     }
 
-    const conceptList = [
-        { _id: 'zxc', name: 'Arriendo', description: '' },
-        { _id: 'zxcv', name: 'Flores', description: '' },
-    ]
-
-    const isNonMobile = useMediaQuery("(min-width:600px)")
-
     const handleFormSubmit = (values) => {
         console.log(values)
+        dispatch(  )
     }
+
+    useEffect(() => {
+        if (!conceptList.length) {
+            dispatch(getConceptList())
+        }
+
+    }, [dispatch, conceptList])
 
     return (
         <RegisterPayment
-            isNonMobile={isNonMobile}
             handleFormSubmit={handleFormSubmit}
             initialValues={initialValues}
             checkoutSchema={checkoutSchema}
