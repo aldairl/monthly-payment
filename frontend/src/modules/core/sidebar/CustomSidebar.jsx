@@ -67,9 +67,9 @@ export const CustomSidebar = ({ collapsed, toggled, hasImage, theme, menuItemSty
               <MenuItem> Bar charts</MenuItem>
             </SubMenu>
 
-            <SubMenu label="Maps" icon={<PublicIcon />}>
-              <MenuItem> Google maps</MenuItem>
-              <MenuItem> Open street maps</MenuItem>
+            <SubMenu label="Conceptos" icon={<PublicIcon />}>
+              <MenuItem> lista de conceptos</MenuItem>
+              <MenuItem> crear concepto</MenuItem>
             </SubMenu>
 
             <SubMenu label="Theme" icon={<BrushIcon />}>

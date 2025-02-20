@@ -77,7 +77,7 @@ export const SearchField = ({ onSearch, sx }) => {
                 />
             </Search>
 
-            <Button variant="contained" color="info" gridColumn='span 1' >buscar</Button>
+            <Button variant="contained" color="info" gridColumn='span 1' onClick={handleSearch} >buscar</Button>
 
         </Box>
     )

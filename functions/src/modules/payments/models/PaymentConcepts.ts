@@ -3,7 +3,7 @@ import mongoose, { Document, Schema, Types } from 'mongoose'
 export interface IPaymentConcept extends Document {
     concept_id: Types.ObjectId
     payment_id: Types.ObjectId
-    month_id: Types.ObjectId
+    month: string
     amount: number
     creation_date: Date
 }
@@ -19,10 +19,9 @@ const PaymentConceptSchema: Schema<IPaymentConcept> = new Schema({
         required: true,
         ref: 'Payment'
     },
-    month_id: {
-        type: Schema.Types.ObjectId,
+    month: {
+        type: String,
         required: true,
-        ref: 'Month'
     },
     amount: {
         type: Number,

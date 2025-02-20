@@ -3,10 +3,11 @@ import { Box, Button, TextField, Card, CardContent, MenuItem, Typography } from 
 import DeleteIcon from '@mui/icons-material/Delete';
 import Divider from '@mui/material/Divider'
 import { FieldArray, Form, Formik } from "formik"
+import { Loading } from '../../../../../components/Loading';
 
 
 export const RegisterPayment = ({
-    isNonMobile, handleFormSubmit, initialValues, checkoutSchema, conceptList, months, boxes, beneficiarySelected
+    isNonMobile, handleFormSubmit, initialValues, checkoutSchema, conceptList, months, boxes, beneficiarySelected, loading
 }) => {
 
     return (
@@ -143,8 +144,8 @@ export const RegisterPayment = ({
                                                             }}
                                                         >
                                                             {
-                                                                months.map(({ _id, name }, index) => (
-                                                                    <MenuItem key={_id} value={_id} selected={(index === 0)} >
+                                                                months.map(({ name }, index) => (
+                                                                    <MenuItem key={name} value={name} selected={(index === 0)} >
                                                                         {name}
                                                                     </MenuItem>
                                                                 ))
@@ -187,7 +188,7 @@ export const RegisterPayment = ({
                                                 <Button
                                                     variant='outlined'
                                                     className="secondary"
-                                                    onClick={() => push({ concept_id: conceptList[0]['_id'] || '', amount: 30000, month_id: months[0]._id || '' })}
+                                                    onClick={() => push({ concept_id: conceptList[0]['_id'] || '', amount: 30000, month_id: months[new Date().getMonth()].name || '' })}
                                                 >
                                                     Agregar concepto
                                                 </Button>
@@ -203,8 +204,8 @@ export const RegisterPayment = ({
                                     <Box display="flex" justifyContent="space-between" mt="20px">
 
                                         <Typography variant='h3' color='success' > Total pago $ {values.concepts.reduce( (total, current ) => total + current.amount, 0 )} </Typography>
-                                        <Button type="submit" color="success" variant="contained">
-                                            Guardar pago
+                                        <Button disabled={loading}  type="submit" color="success" variant="contained">
+                                            {!loading ? 'Guardar pago' : <Loading color='white' />}
                                         </Button>
                                     </Box>
                                 }
@@ -224,12 +225,9 @@ RegisterPayment.propTypes = {
     handleFormSubmit: PropTypes.func,
     initialValues: PropTypes.object,
     checkoutSchema: PropTypes.object,
-    handleConceptsSubmit: PropTypes.func,
-    conceptInitialValues: PropTypes.object,
-    conceptsCheckoutSchema: PropTypes.object,
     beneficiarySelected: PropTypes.object,
     boxes: PropTypes.array,
     conceptList: PropTypes.array,
     months: PropTypes.array,
-    currentConcepts: PropTypes.array,
+    loading: PropTypes.bool,
 }
