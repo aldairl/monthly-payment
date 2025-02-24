@@ -36,4 +36,8 @@ export class ConceptService {
     async deletePaymentConcepts(paymentId: mongoose.Types.ObjectId, session: mongoose.ClientSession) {
         return PaymentConcepts.deleteMany({ payment_id: paymentId }, { session })
     }
+
+    async getConceptsByPayment(paymentId: string): Promise<IConcept[]> {
+        return await PaymentConcepts.find({ payment_id : paymentId })
+    }
 }

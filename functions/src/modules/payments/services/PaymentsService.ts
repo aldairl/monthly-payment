@@ -3,12 +3,12 @@ import { CashFlowService } from "../../cashFlow/service/CashFlowService"
 import Payment, { IPayment } from "../models/Payments"
 import { ConceptService } from "./ConceptService"
 import { IPaymentConcept } from "../models/PaymentConcepts"
-import { BeneficiaryService } from "../../beneficiaries/services/BeneficiaryService";
+// import { BeneficiaryService } from "../../beneficiaries/services/BeneficiaryService"
 
 const cashFlowService = new CashFlowService()
 const conceptService = new ConceptService()
 
-const beneficiaryService = new BeneficiaryService()
+// const beneficiaryService = new BeneficiaryService()
 
 export class PaymentService {
     async getAllPayments(query: object): Promise<IPayment[]> {
@@ -89,20 +89,119 @@ export class PaymentService {
         }
     }
 
-    async getLastBeneficiaryPayment(cc: string): Promise<IPayment | null> {
+    async getLastBeneficiaryPayment(cc: string): Promise<any | null> {
         // seaech beneficiary
-        const beneficiary = await beneficiaryService.getBeneficiaryByDNI(cc)
+        // const beneficiary = await beneficiaryService.getBeneficiaryByDNI(cc)
 
-        if(!beneficiary){
-            return null
-        }
+        // if(!beneficiary){
+        //     return null
+        // }
 
-        const lastPayment = await Payment.findOne({ payer: beneficiary })
-            .sort({ creation_date: -1 }) // Ordenar por fecha descendente
-            .populate('concepts')
-            .populate('box')
-            .populate('payer')
-            .exec()
+        // const lastPayment = await Payment.findOne({ payer: beneficiary })
+        //     .sort({ creation_date: -1 }) // Ordenar por fecha descendente
+        //     .populate('box')
+        //     .exec()
+        
+        // // seach concept
+        
+        // const concepts = await conceptService.getConceptsByPayment(lastPayment?.id)
+
+        // return {beneficiary, lastPayment, concepts}
+
+        const lastPayment = await Payment.aggregate([
+            // Relacionar con "beneficiaries" (payer)
+            {
+                $lookup: {
+                    from: 'beneficiaries', // Nombre real de la colección "User"
+                    localField: 'payer',
+                    foreignField: '_id',
+                    as: 'payer'
+                }
+            },
+            { $unwind: '$payer' }, // Convertir array en objeto
+            { $match: { 'payer.identification': cc } }, // Filtrar por identificación del payer
+            { $sort: { creation_date: -1 } }, // Ordenar por fecha de creación (descendente)
+            { $limit: 1 }, // Solo traer el último pago
+        
+            // Relacionar con "boxes" usando "box_id"
+            {
+                $lookup: {
+                    from: 'boxes', // Nombre de la colección "box"
+                    localField: 'box',
+                    foreignField: '_id',
+                    as: 'box'
+                }
+            },
+            { $unwind: '$box' }, // Convertir array en objeto
+        
+            // Relacionar con "paymentconcepts" usando "id" de "Payments" con "payment_id"
+            {
+                $lookup: {
+                    from: 'paymentconcepts', // Nombre de la colección de conceptos de pago
+                    localField: '_id', // ID del pago en Payments
+                    foreignField: 'payment_id', // Campo de referencia en paymentconcepts
+                    as: 'concepts'
+                }
+            },
+        
+            // Relacionar con "concepts" para obtener el nombre del concepto
+            {
+                $lookup: {
+                    from: 'concepts', // Nombre de la colección de conceptos
+                    localField: 'concepts.concept_id', // Campo de referencia en paymentconcepts
+                    foreignField: '_id', // Campo en concepts
+                    as: 'conceptDetails'
+                }
+            },
+        
+            // Unir los detalles de conceptos a cada concepto en el array
+            {
+                $addFields: {
+                    concepts: {
+                        $map: {
+                            input: '$concepts',
+                            as: 'concept',
+                            in: {
+                                amount: '$$concept.amount',
+                                month: '$$concept.month',
+                                details: {
+                                    $arrayElemAt: [
+                                        {
+                                            $filter: {
+                                                input: '$conceptDetails',
+                                                as: 'cd',
+                                                cond: { $eq: ['$$cd._id', '$$concept.concept_id'] }
+                                            }
+                                        },
+                                        0
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+        
+            // Seleccionar los campos a devolver
+            {
+                $project: {
+                    amount: 1,
+                    type: 1,
+                    creation_date: 1,
+                    'payer.name': 1,
+                    'payer.lastname': 1,
+                    'payer.identification': 1,
+                    'payer.temple': 1,
+                    'payer.cellphone': 1,
+                    'box.name': 1, // Suponiendo que "box" tiene un campo "name"
+                    'box.location': 1, // Otro campo ejemplo de "box"
+                    'concepts.concept_id': 1,
+                    'concepts.amount': 1,
+                    'concepts.month': 1,
+                    'concepts.details.name': 1 // Nombre del concepto desde "concepts"
+                }
+            }
+        ])
 
         return lastPayment
     }
