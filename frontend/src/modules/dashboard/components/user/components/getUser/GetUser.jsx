@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
-import { Box, Button, Card, CardContent, Divider, Typography, useMediaQuery } from "@mui/material"
+import { Avatar, Box, Button, Card, CardContent, CardHeader, Divider, Typography, useMediaQuery } from "@mui/material"
+import { red } from '@mui/material/colors'
 import { SearchField } from "../../../../../../components/SearchField"
 import { Loading } from '../../../../../../components/Loading'
-
 export const GetUser = ({ onSearch, beneficiaries, identification, loading, error, gotToAddNew, selectBeneficiary }) => {
 
     const isNonMobile = useMediaQuery("(min-width:600px)")
@@ -17,7 +17,7 @@ export const GetUser = ({ onSearch, beneficiaries, identification, loading, erro
                 padding: 2
             }}
         >
-            <Typography gridColumn='span 3' variant="h3" >Buscar usuario</Typography>
+            <Typography variant="h3" >Buscar usuario</Typography>
             <SearchField sx={{ gridColumn: 'span 3' }} onSearch={onSearch} />
 
             {loading && <Loading />}
@@ -30,12 +30,40 @@ export const GetUser = ({ onSearch, beneficiaries, identification, loading, erro
                     <Divider sx={{ gridColumn: "span 3" }} >Beneficiario encontrado</Divider>
 
                     {beneficiaries.map((beneficiary) => (
-                    <Card key={beneficiary.identification} >
-                        <CardContent onClick={() => selectBeneficiary(beneficiary)}>
-                            {beneficiary.name}
-                            {beneficiary.identification}
-                        </CardContent>
-                    </Card>
+                        <Card 
+                            key={beneficiary.identification}
+                            sx={{
+                                maxWidth: 345
+                            }}
+                        >
+                            <CardHeader
+                                avatar={
+                                    <Avatar 
+                                        aria-label="recipe"
+                                        sx={{ bgcolor: red[500] }}
+                                    >
+                                        {beneficiary.name[0]}
+                                    </Avatar>
+                                }
+                                title={`${beneficiary.name} ${beneficiary.lastname}`}
+                                subheader={beneficiary.identification}
+                            />
+                            <CardContent onClick={() => selectBeneficiary(beneficiary)}>
+                                <Typography color='success' >
+                                    {beneficiary.temple}
+                                </Typography>
+                                <Typography color='info'>
+                                    Celular: {beneficiary.cellphone}
+                                </Typography>
+                                <Typography color='primary'>
+                                    Ultimo pago: 2025-02-15
+                                </Typography>
+                                <Typography color='textPrimary'>
+                                    Concepto: 2025-02-15
+                                </Typography>
+
+                            </CardContent>
+                        </Card>
                     ))}
                 </>
 
