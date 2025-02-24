@@ -1,13 +1,15 @@
 import PropTypes from 'prop-types'
-import { Box, Button, TextField, Card, CardContent, MenuItem, Typography, useMediaQuery } from "@mui/material"
+import { Box, Button, TextField, Card, CardContent, MenuItem, Typography, useMediaQuery, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete';
 import Divider from '@mui/material/Divider'
 import { FieldArray, Form, Formik } from "formik"
 import { Loading } from '../../../../../components/Loading';
+import { ShowPayment } from './list/ShowPayment';
 
 
 export const RegisterPayment = ({
-    handleFormSubmit, initialValues, checkoutSchema, conceptList, months, boxes, beneficiarySelected, loading
+    handleFormSubmit, initialValues, checkoutSchema, conceptList, months, boxes,
+    beneficiarySelected, loading, paymentCreated, handleClose, openDialog, handleNewPayment
 }) => {
     const isNonMobile = useMediaQuery("(min-width:600px)")
     return (
@@ -203,8 +205,8 @@ export const RegisterPayment = ({
 
                                     <Box display="flex" justifyContent="space-between" mt="20px">
 
-                                        <Typography variant='h3' color='success' > Total pago $ {values.concepts.reduce( (total, current ) => total + current.amount, 0 )} </Typography>
-                                        <Button disabled={loading}  type="submit" color="success" variant="contained">
+                                        <Typography variant='h3' color='success' > Total pago $ {values.concepts.reduce((total, current) => total + current.amount, 0)} </Typography>
+                                        <Button disabled={loading} type="submit" color="success" variant="contained">
                                             {!loading ? 'Guardar pago' : <Loading color='white' />}
                                         </Button>
                                     </Box>
@@ -214,8 +216,38 @@ export const RegisterPayment = ({
                         )}
                     </Formik>
 
+                    <Dialog
+                        open={openDialog}
+                        onClose={handleClose}
+                        aria-labelledby="draggable-dialog-title"
+                    >
+                        <DialogTitle id="draggable-dialog-title" variant='h3' color='success' >
+                            Pago registrado correctamente
+                        </DialogTitle>
+                        <DialogContent>
+                                <ShowPayment paymentCreated={paymentCreated} />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button autoFocus onClick={handleClose} color='primary' >
+                                Aceptar
+                            </Button>
+                            <Button onClick={handleNewPayment} color='success' >Guardar nuevo pago</Button>
+                        </DialogActions>
+                    </Dialog>
+
                 </CardContent>
             </Card>
+
+            {
+                paymentCreated &&
+                <Box marginTop={2} >
+                    <ShowPayment paymentCreated={paymentCreated} />
+                    <Box sx={{ textAlign: 'right' }} >
+                        <Button variant='contained' onClick={handleNewPayment} color='success' >Guardar nuevo pago</Button>
+                    </Box>
+                </Box>
+
+            }
         </Box >
     )
 }
@@ -229,4 +261,8 @@ RegisterPayment.propTypes = {
     conceptList: PropTypes.array,
     months: PropTypes.array,
     loading: PropTypes.bool,
+    openDialog: PropTypes.bool,
+    paymentCreated: PropTypes.object,
+    handleClose: PropTypes.func,
+    handleNewPayment: PropTypes.func,
 }

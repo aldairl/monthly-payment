@@ -2,8 +2,10 @@ import { RegisterPayment } from "./RegisterPayment"
 import { useDispatch, useSelector } from "react-redux"
 import * as yup from "yup"
 import { MONTHS } from "../utils/months"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { getConceptList } from "../../../store/dashThunks"
+import { clean } from "../store/paymentSlice"
+import { useNavigate } from "react-router-dom"
 
 
 const checkoutSchema = yup.object().shape({
@@ -16,10 +18,12 @@ const checkoutSchema = yup.object().shape({
 export const RegisterPaymentContainer = () => {
 
     const dispatch = useDispatch()
-    const { payer, box, loading } = useSelector(state => state.payment)
+    const navigate = useNavigate()
+    const { payer, box, loading, paymentCreated } = useSelector(state => state.payment)
     const { beneficiarySelected } = useSelector(state => state.beneficiary)
     const { conceptList } = useSelector(state => state.dash)
     const { boxes } = useSelector(state => state.box)
+    const [openDialog, setOpenDialog] = useState(false)
 
     const initialValues = {
         payer,
@@ -30,7 +34,17 @@ export const RegisterPaymentContainer = () => {
 
     const handleFormSubmit = (values) => {
         console.log(values)
-        dispatch(  )
+        dispatch()
+    }
+
+    const handleCloseDialog = () => {
+        console.log(paymentCreated)
+        setOpenDialog(false)
+    }
+
+    const handleNewPayment = () => {
+        dispatch(clean())
+        navigate('/dash/user/get-user')
     }
 
     useEffect(() => {
@@ -39,6 +53,20 @@ export const RegisterPaymentContainer = () => {
         }
 
     }, [dispatch, conceptList])
+
+    useEffect(() => {
+        if (paymentCreated) {
+            setOpenDialog(true)
+        }
+
+    }, [paymentCreated])
+
+    useEffect(() => {
+        if (!payer) {
+            navigate('/dash/user/get-user')
+        }
+
+    }, [payer, navigate])
 
     return (
         <RegisterPayment
@@ -50,6 +78,10 @@ export const RegisterPaymentContainer = () => {
             boxes={boxes}
             beneficiarySelected={beneficiarySelected}
             loading={loading}
+            paymentCreated={paymentCreated}
+            handleClose={handleCloseDialog}
+            openDialog={openDialog}
+            handleNewPayment={handleNewPayment}
         />
     )
 }

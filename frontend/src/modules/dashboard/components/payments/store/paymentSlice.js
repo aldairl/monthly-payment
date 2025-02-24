@@ -7,7 +7,8 @@ const initialState = {
     type: '',
     concepts: [], //{concept_id, amount, month_id}
     loading: false,
-    error: ''
+    error: '',
+    paymentCreated: null
 }
 
 export const paymentSlice = createSlice({
@@ -35,13 +36,12 @@ export const paymentSlice = createSlice({
         removeItem: (state, { payload }) => {
             state.concepts = state.concepts.filter((item, index) => index !== payload);
         },
-        clean: (state) => {
-            state.payer = ''
-            state.box = ''
-            state.loading = ''
-            state.error = ''
+        clean: () => initialState,
+
+        setPaymentCreated: (state, { payload }) => {
+            state.paymentCreated = payload
         },
     }
 })
 
-export const { setLoading, setError, setPayer, setBox, setType, addConcept, clean, removeItem } = paymentSlice.actions
+export const { setLoading, setError, setPayer, setBox, setType, addConcept, clean, removeItem, setPaymentCreated } = paymentSlice.actions
