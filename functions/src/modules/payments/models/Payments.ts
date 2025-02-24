@@ -14,7 +14,7 @@ export interface IPayment extends Document {
 const PaymentSchema: Schema<IPayment> = new Schema({
     payer: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Beneficiary',
         required: true
     },
     box: {
@@ -75,6 +75,13 @@ PaymentSchema.pre('findOneAndUpdate', async function (next) {
         console.error('Error en middleware de Payment:', error);
         next(error as mongoose.CallbackError)
     }
+})
+
+// Virtual para traer los conceptos asociados a un pago
+PaymentSchema.virtual('concepts', {
+    ref: 'PaymentConcept', // Nombre del modelo a poblar
+    localField: '_id',     // Campo en Payment
+    foreignField: 'payment_id', // Campo en ConceptPayment
 })
 
 export default mongoose.model<IPayment>('Payment', PaymentSchema)

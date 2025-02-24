@@ -3,9 +3,12 @@ import { CashFlowService } from "../../cashFlow/service/CashFlowService"
 import Payment, { IPayment } from "../models/Payments"
 import { ConceptService } from "./ConceptService"
 import { IPaymentConcept } from "../models/PaymentConcepts"
+import { BeneficiaryService } from "../../beneficiaries/services/BeneficiaryService";
 
 const cashFlowService = new CashFlowService()
 const conceptService = new ConceptService()
+
+const beneficiaryService = new BeneficiaryService()
 
 export class PaymentService {
     async getAllPayments(query: object): Promise<IPayment[]> {
@@ -73,7 +76,7 @@ export class PaymentService {
         try {
             const paymentSaved = await this.createPayment(paymentData, session)
             await cashFlowService.updateCashFlow(paymentSaved.box, Number(paymentSaved.amount), paymentSaved.type, session)
-            
+
             await conceptService.createPaymentConcepts(paymentSaved.id, concepts, session)
 
             await session.commitTransaction()
@@ -84,5 +87,23 @@ export class PaymentService {
             session.endSession()
             throw error
         }
+    }
+
+    async getLastBeneficiaryPayment(cc: string): Promise<IPayment | null> {
+        // seaech beneficiary
+        const beneficiary = await beneficiaryService.getBeneficiaryByDNI(cc)
+
+        if(!beneficiary){
+            return null
+        }
+
+        const lastPayment = await Payment.findOne({ payer: beneficiary })
+            .sort({ creation_date: -1 }) // Ordenar por fecha descendente
+            .populate('concepts')
+            .populate('box')
+            .populate('payer')
+            .exec()
+
+        return lastPayment
     }
 }

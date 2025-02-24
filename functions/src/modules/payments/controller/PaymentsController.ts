@@ -67,4 +67,17 @@ export class PaymentController {
             responses.error(req, res, error)
         }
     }
+
+    async getLastBeneficiaryPayment(req: Request, res: Response): Promise<void> {
+        try {
+            const Payment = await paymentService.getLastBeneficiaryPayment(req.params.cc)
+            if (Payment) {
+                responses.success(req, res, Payment)
+            } else {
+                responses.error(req, res, { message: "Payment not found" })
+            }
+        } catch (error) {
+            responses.error(req, res, error)
+        }
+    }
 }
