@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { GetUser } from "./GetUser"
 import { getBeneficiaryByDNI } from "../../storage/beneficiaryThunks"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { setBeneficiarySelected } from "../../storage/beneficiarySlice"
 import { setPayer } from "../../../payments/store/paymentSlice"
@@ -9,6 +9,8 @@ import { setPayer } from "../../../payments/store/paymentSlice"
 export const GetUserContainer = () => {
 
     const { beneficiaries, loading, error } = useSelector(state => state.beneficiary)
+    const { box } = useSelector(state => state.payment)
+
     const [identification, setIdentification] = useState('')
 
     const dispatch = useDispatch()
@@ -26,9 +28,16 @@ export const GetUserContainer = () => {
 
     const selectBeneficiary = (beneficiary) => {
         dispatch(setBeneficiarySelected(beneficiary))
-        dispatch( setPayer(beneficiary._id) )
+        dispatch(setPayer(beneficiary._id))
         navigate('/dash/box/new-payment')
     }
+
+    useEffect(() => {
+        if (!box) {
+            navigate('/dash/box/list')
+        }
+    }, [box, navigate])
+
 
     return (
         <GetUser

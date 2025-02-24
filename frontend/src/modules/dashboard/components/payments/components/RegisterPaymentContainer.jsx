@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { getConceptList } from "../../../store/dashThunks"
 import { clean } from "../store/paymentSlice"
 import { useNavigate } from "react-router-dom"
+import { createPayment } from "../store/paytmentThunks"
 
 
 const checkoutSchema = yup.object().shape({
@@ -34,7 +35,9 @@ export const RegisterPaymentContainer = () => {
 
     const handleFormSubmit = (values) => {
         console.log(values)
-        dispatch()
+        const amount = values.concepts.reduce((total, current) => total + current.amount, 0)
+        const newPayment = { ...values, amount }
+        dispatch(createPayment(newPayment))
     }
 
     const handleCloseDialog = () => {

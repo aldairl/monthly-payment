@@ -16,7 +16,7 @@ export class CashFlowService {
                 { upsert: true, new: true, session }
             )
 
-            console.log(`Cash flow actualizado para ${cashSaved.year}-${cashSaved.month}`)
+            console.log(`Cash flow actualizado para ${cashSaved}-${cashSaved.month}`)
         } catch (error) {
             console.error('Error actualizando cash flow:', error)
         }

@@ -135,8 +135,8 @@ export const RegisterPayment = ({
                                                             type="text"
                                                             label="Mes"
                                                             onChange={handleChange}
-                                                            name={`concepts.${index}.month_id`}
-                                                            value={values.concepts[index]?.month_id || ''}
+                                                            name={`concepts.${index}.month`}
+                                                            value={values.concepts[index]?.month || ''}
                                                             select
                                                             sx={{
                                                                 gridColumn: "span 2",
@@ -190,7 +190,7 @@ export const RegisterPayment = ({
                                                 <Button
                                                     variant='outlined'
                                                     className="secondary"
-                                                    onClick={() => push({ concept_id: conceptList[0]['_id'] || '', amount: 30000, month_id: months[new Date().getMonth()].name || '' })}
+                                                    onClick={() => push({ concept_id: conceptList[0]['_id'] || '', amount: 30000, month: months[new Date().getMonth()].name || '' })}
                                                 >
                                                     Agregar concepto
                                                 </Button>

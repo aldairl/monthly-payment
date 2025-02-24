@@ -20,6 +20,7 @@ export const paymentSlice = createSlice({
         },
         setError: (state, { payload }) => {
             state.error = payload
+            state.loading = false
         },
         setPayer: (state, { payload }) => {
             state.payer = payload
@@ -40,6 +41,8 @@ export const paymentSlice = createSlice({
 
         setPaymentCreated: (state, { payload }) => {
             state.paymentCreated = payload
+            state.loading=false
+            state.error=''
         },
     }
 })
