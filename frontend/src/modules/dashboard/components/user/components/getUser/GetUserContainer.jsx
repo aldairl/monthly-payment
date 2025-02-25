@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { GetUser } from "./GetUser"
-import { getBeneficiaryByDNI } from "../../storage/beneficiaryThunks"
+import { getLastBeneficiaryPayment } from "../../storage/beneficiaryThunks"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { setBeneficiarySelected } from "../../storage/beneficiarySlice"
@@ -16,10 +16,10 @@ export const GetUserContainer = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const onSearch = (query) => {
-        console.log(query)
-        setIdentification(query)
-        dispatch(getBeneficiaryByDNI(query))
+    const onSearch = (identification) => {
+        console.log(identification)
+        setIdentification(identification)
+        dispatch(getLastBeneficiaryPayment(identification))
     }
 
     const gotToAddNew = () => {

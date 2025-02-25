@@ -3,6 +3,7 @@ import { Avatar, Box, Button, Card, CardContent, CardHeader, Divider, Typography
 import { red } from '@mui/material/colors'
 import { SearchField } from "../../../../../../components/SearchField"
 import { Loading } from '../../../../../../components/Loading'
+import { getLocalDate } from '../../../../../../utils/dateUtils'
 export const GetUser = ({ onSearch, beneficiaries, identification, loading, error, gotToAddNew, selectBeneficiary }) => {
 
     const isNonMobile = useMediaQuery("(min-width:600px)")
@@ -31,9 +32,11 @@ export const GetUser = ({ onSearch, beneficiaries, identification, loading, erro
 
                     {beneficiaries.map((beneficiary) => (
                         <Card 
+                            onClick={() => selectBeneficiary(beneficiary)}
                             key={beneficiary.identification}
                             sx={{
-                                maxWidth: 345
+                                maxWidth: 345,
+                                cursor: 'pointer'
                             }}
                         >
                             <CardHeader
@@ -48,7 +51,7 @@ export const GetUser = ({ onSearch, beneficiaries, identification, loading, erro
                                 title={`${beneficiary.name} ${beneficiary.lastname}`}
                                 subheader={beneficiary.identification}
                             />
-                            <CardContent onClick={() => selectBeneficiary(beneficiary)}>
+                            <CardContent>
                                 <Typography color='success' >
                                     {beneficiary.temple}
                                 </Typography>
@@ -56,11 +59,15 @@ export const GetUser = ({ onSearch, beneficiaries, identification, loading, erro
                                     Celular: {beneficiary.cellphone}
                                 </Typography>
                                 <Typography color='primary'>
-                                    Ultimo pago: 2025-02-15
+                                    Ultimo pago: { getLocalDate(beneficiary.lastPayment) }
+                                </Typography>
+                                <Typography color='primary'>
+                                    Registrado en { beneficiary.box }
                                 </Typography>
                                 <Typography color='textPrimary'>
-                                    Concepto: 2025-02-15
+                                    { beneficiary.concepts }
                                 </Typography>
+
 
                             </CardContent>
                         </Card>

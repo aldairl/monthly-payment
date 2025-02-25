@@ -188,6 +188,7 @@ export class PaymentService {
                     amount: 1,
                     type: 1,
                     creation_date: 1,
+                    'payer._id': 1,
                     'payer.name': 1,
                     'payer.lastname': 1,
                     'payer.identification': 1,

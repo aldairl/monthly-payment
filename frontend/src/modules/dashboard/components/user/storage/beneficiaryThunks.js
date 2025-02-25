@@ -21,6 +21,36 @@ export const getBeneficiaryByDNI = (identification) => {
     }
 }
 
+export const getLastBeneficiaryPayment = (identification) => {
+    return async (dispatch) => {
+        dispatch(setLoading(true))
+        
+        const url = `${VITE_API_URL}/payments/last/${identification}`
+        
+        try {
+            const { body, success } = await fetchData(url)
+            
+            if(!success){
+                return dispatch(setError(body.error))
+            }
+            
+            const { payer, box, creation_date, concepts} = body[0]
+
+            const conceptString =  concepts.map( ({ month, details, amount }) => `concepto: ${details.name}, ${month}, valor: ${amount}` ).join('\n')
+
+            const beneficiaryLastPaymentInfo = [{ ...payer, lastPayment: creation_date, concepts: conceptString, box: box.name }]
+
+            dispatch(setBeneficiaries(beneficiaryLastPaymentInfo))
+
+        } catch (error) {
+            console.log(error)
+            dispatch(setError(error.message || String(error)))
+        } finally {
+            dispatch(setLoading(false))
+        }
+    }
+}
+
 export const addBeneficiary = ({ name, lastname, identification, birthdate, temple, cellphone }) => {
     return async (dispatch) => {
         dispatch(setLoading(true))
