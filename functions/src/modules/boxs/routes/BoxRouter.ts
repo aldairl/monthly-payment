@@ -5,7 +5,7 @@ import { authenticateJWT } from "../../../common/middlewares/Auth"
 const boxRouter = Router()
 const boxController = new BoxController()
 
-boxRouter.get("/", boxController.getAllBoxes)
+boxRouter.get("/", authenticateJWT, boxController.getAllBoxes)
 boxRouter.get("/:id", authenticateJWT, boxController.getBoxById)
 boxRouter.post("/", authenticateJWT, boxController.createBox)
 boxRouter.put("/:id", authenticateJWT, boxController.updateBox)

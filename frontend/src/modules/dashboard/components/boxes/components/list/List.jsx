@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import { Box, Button, Card, CardActions, CardContent, FormControl, FormHelperText, MenuItem, Select, Typography, useMediaQuery } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { Loading } from '../../../../../../components/Loading'
+import { numberFormatMiles } from '../../../../../../utils/dateUtils'
 
 export const List = ({ loading, error, handlerCloseBox, handlerNewBox, handlerNewPayment, boxes, years, handleChangeYearSelected, yearSelected }) => {
 
@@ -52,7 +53,7 @@ export const List = ({ loading, error, handlerCloseBox, handlerNewBox, handlerNe
       </Box>
 
       {
-        boxes.map(({ _id, name, status, description, creation_date, close_date }) => (
+        boxes.map(({ _id, name, status, description, creation_date, close_date, cashflow }) => (
           <Card key={_id} sx={{ gridColumn: "span 1", "&:hover": { boxShadow: 10 }, cursor: 'pointer' }}>
 
             <CardContent onClick={status === 'open' ? () => handlerNewPayment(_id) : null}>
@@ -61,9 +62,15 @@ export const List = ({ loading, error, handlerCloseBox, handlerNewBox, handlerNe
                 {status === 'open' ? 'abierta' : 'cerrada'}
               </Typography>
 
-              <Typography variant="h5" component="div" sx={{ fontSize: 18 }} color={status === 'open' ? 'primary' : 'textDisabled'}>
-                {name}
-              </Typography>
+              <Box display='flex' justifyContent='space-between'> 
+                <Typography variant="h5" component="div" sx={{ fontSize: 18 }} color={status === 'open' ? 'primary' : 'textDisabled'}  >
+                  {name.toUpperCase()}
+                </Typography>
+                <Typography variant="h5" component="div" sx={{ fontSize: 18 }} color={status === 'open' ? 'primary' : 'textDisabled'} >
+                  { numberFormatMiles(cashflow.total_balance)}
+                </Typography>
+
+              </Box>
 
               <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>
                 {status === 'open' ? new Date(creation_date).toISOString().split('T')[0] : new Date(close_date).toISOString().split('T')[0]}
