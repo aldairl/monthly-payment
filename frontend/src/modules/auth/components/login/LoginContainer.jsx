@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { loginUser } from "../../store/thunks"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { logout } from "../../store/authSlice"
 
 
 const checkoutSchema = yup.object().shape({
@@ -26,6 +27,7 @@ export const LoginContainer = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)")
 
     const handleFormSubmit = ({ username, password }) => {
+        dispatch( logout() )
         // console.log({ username, password })
         dispatch(loginUser(username, password))
         // navigate('/dash/years')

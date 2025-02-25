@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types'
-import { Box, Button, TextField, Card, CardContent } from "@mui/material"
+import { Box, Button, TextField, Card, CardContent, Typography } from "@mui/material"
 import { Form, Formik } from "formik"
+import { Loading } from '../../../../components/Loading'
 
-export const Login = ({ isNonMobile, handleFormSubmit, initialValues, checkoutSchema, }) => {
+export const Login = ({ isNonMobile, handleFormSubmit, initialValues, checkoutSchema, loading, error }) => {
     return (
         <Box textAlign='center' display='flex' justifyContent='center' marginTop={8} >
             <Card sx={{ maxWidth: 360, minWidth: 360 }} >
@@ -52,10 +53,11 @@ export const Login = ({ isNonMobile, handleFormSubmit, initialValues, checkoutSc
                                     />
                                 </Box>
 
-                                <Box display="flex" justifyContent="center" mt="20px">
+                                <Box display="flex" justifyContent="center" mt="20px" flexDirection='column'>
                                     <Button type="submit" color="info" variant="contained">
-                                        Aceptar
+                                        {loading ? <Loading color='primary' /> : 'Aceptar'}
                                     </Button>
+                                    { error && <Typography marginTop={2} color='error' > {error} </Typography> }
                                 </Box>
                             </Form>
                         )}
@@ -71,4 +73,6 @@ Login.propTypes = {
     handleFormSubmit: PropTypes.func,
     initialValues: PropTypes.object,
     checkoutSchema: PropTypes.object,
+    loading: PropTypes.bool,
+    error: PropTypes.string,
 }
