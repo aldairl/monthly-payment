@@ -10,6 +10,6 @@ paymentsRouter.get("/:id", authenticateJWT, paymentController.getPaymentById)
 paymentsRouter.post("/", authenticateJWT, paymentController.createPayment)
 paymentsRouter.put("/:id", authenticateJWT, paymentController.updatePayment)
 paymentsRouter.delete("/:id", authenticateJWT, paymentController.deletePayment)
-paymentsRouter.get("/last/:cc", paymentController.getLastBeneficiaryPayment)
+paymentsRouter.get("/last/:cc", authenticateJWT, paymentController.getLastBeneficiaryPayment)
 
 export default paymentsRouter
