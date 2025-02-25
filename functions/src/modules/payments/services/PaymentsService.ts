@@ -91,22 +91,6 @@ export class PaymentService {
 
     async getLastBeneficiaryPayment(cc: string): Promise<any | null> {
         // seaech beneficiary
-        // const beneficiary = await beneficiaryService.getBeneficiaryByDNI(cc)
-
-        // if(!beneficiary){
-        //     return null
-        // }
-
-        // const lastPayment = await Payment.findOne({ payer: beneficiary })
-        //     .sort({ creation_date: -1 }) // Ordenar por fecha descendente
-        //     .populate('box')
-        //     .exec()
-        
-        // // seach concept
-        
-        // const concepts = await conceptService.getConceptsByPayment(lastPayment?.id)
-
-        // return {beneficiary, lastPayment, concepts}
 
         const lastPayment = await Payment.aggregate([
             // Relacionar con "beneficiaries" (payer)

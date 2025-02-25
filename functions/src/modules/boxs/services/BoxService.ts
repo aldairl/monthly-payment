@@ -4,14 +4,27 @@ export class BoxService {
     async getAllBoxes(year: number): Promise<IBox[]> {
         let query = {}
 
-        if(year){
+        if (year) {
             // create a range 
             const initDate = new Date(`${year}-01-01`)
             const endDate = new Date(`${year + 1}-01-01`)
 
             query = { creation_date: { $gte: initDate, $lte: endDate } }
         }
-        return await Box.find(query)
+
+        // return await Box.find(query)
+        return await Box.aggregate([
+            { $match: query },
+            {
+                $lookup: {
+                    from: 'cashflows',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'cashflow'
+                }
+            },
+            { $unwind: '$cashflow' },
+        ])
     }
 
     async getBoxById(id: string): Promise<IBox | null> {
