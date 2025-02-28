@@ -21,6 +21,7 @@ export const ListContainer = () => {
 
   const handlerNewBox = () => {
     console.log('cerrar caja')
+    navigate('/dash/box/create')
   }
 
   const handlerNewPayment = (boxId) => {

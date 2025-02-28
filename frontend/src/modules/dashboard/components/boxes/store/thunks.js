@@ -1,6 +1,6 @@
 import { VITE_API_URL } from "../../../../../config/variables"
 import { fetchData } from "../../../../../utils/fetch-request"
-import { removeBox, setBoxes, setError, setLoading } from "./boxSlice"
+import { addBox, removeBox, setBoxes, setError, setLoading } from "./boxSlice"
 
 export const getBoxes = (year = 2025) => {
     return async (dispatch) => {
@@ -36,6 +36,33 @@ export const deleteBox = (boxId) => {
                 dispatch(setError(body.error))
             }
             dispatch(removeBox(boxId))
+        } catch (error) {
+            dispatch(setError(error.message || String(error)))
+        } finally {
+            dispatch(setLoading(false))
+        }
+    }
+}
+
+export const createBox = ({ name, description }) => {
+    return async (dispatch) => {
+        dispatch(setLoading(true))
+
+        const url = `${VITE_API_URL}/box`
+
+        const body = {
+            name,
+            description
+        }
+
+        const options = {
+            method: 'POST',
+            body
+        }
+
+        try {
+            const { body } = await fetchData(url, options)
+            dispatch(addBox(body))
         } catch (error) {
             dispatch(setError(error.message || String(error)))
         } finally {

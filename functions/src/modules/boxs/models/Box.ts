@@ -10,18 +10,30 @@ export interface IBox extends Document {
 
 const BoxSchema: Schema = new Schema({
     name: { type: String, required: true },
-    status: { type: String, enum: ['open', 'close'], default:'open' },
+    status: { type: String, enum: ['open', 'close'], default: 'open' },
     description: { type: String, required: true },
     creation_date: { type: Date, default: Date.now },
     close_date: { type: Date, required: false },
 })
 
 BoxSchema.pre('deleteOne', { document: true, query: false }, async function (next) {
-    try { 
+    try {
         await mongoose.model('Payment').deleteMany({ box: this._id }).exec()
         next()
     } catch (error) {
         next(error as mongoose.CallbackError)
+    }
+})
+
+BoxSchema.post('save', async function (doc) {
+    try {
+        await mongoose.model('CashFlow').create({
+            box: doc._id,
+            year: new Date().getFullYear(),
+            month: new Date().getMonth() + 1
+        })
+    } catch (error) {
+        console.error('Error al crear cash flow:', error)
     }
 })
 

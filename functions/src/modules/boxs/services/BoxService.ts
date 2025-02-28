@@ -19,7 +19,7 @@ export class BoxService {
                 $lookup: {
                     from: 'cashflows',
                     localField: '_id',
-                    foreignField: '_id',
+                    foreignField: 'box',
                     as: 'cashflow'
                 }
             },
