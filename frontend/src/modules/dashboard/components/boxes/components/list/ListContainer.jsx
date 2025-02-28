@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { List } from './List'
 import { useDispatch, useSelector } from 'react-redux'
-import { getBoxes } from '../../store/thunks'
+import { deleteBox, getBoxes } from '../../store/thunks'
 import { useNavigate } from 'react-router-dom'
 import { setBox } from '../../../payments/store/paymentSlice'
 
@@ -9,7 +9,9 @@ export const ListContainer = () => {
   const { boxes, loading, error, years } = useSelector(state => state.box)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [ boxLoaded, setBoxLoaded ] = useState(false)
+  const [boxLoaded, setBoxLoaded] = useState(false)
+  const [dialogDelete, setDialogDelete] = useState(false)
+  const [boxToDelete, setBoxToDelete] = useState(null)
 
   const [yearSelected, setYearSelected] = useState('')
 
@@ -29,6 +31,29 @@ export const ListContainer = () => {
   const handleChangeYearSelected = ({ target }) => {
     setYearSelected(target.value)
     console.log('seleccionar año', target.value)
+  }
+
+  const viewBoxPayments = (boxId) => {
+    // dispatch(setBox(boxId))
+    // navigate('/dash/user/get-user')
+    console.log('ver pagos de caja', boxId)
+  }
+
+  const handleDeleteBox = (boxId, name) => {
+    setDialogDelete(true)
+    console.log('eliminar caja', boxId, name)
+    setBoxToDelete({ boxId, name })
+  }
+
+  const handlerCancelDelete = () => {
+    setDialogDelete(false)
+    setBoxToDelete(null)
+  }
+  
+  const handleConfirmBoxDelete = () => {
+    console.log('confirmar eliminar caja')
+    dispatch( deleteBox(boxToDelete.boxId) )
+    setDialogDelete(false)
   }
 
   useEffect(() => {
@@ -51,6 +76,12 @@ export const ListContainer = () => {
       years={years}
       loading={loading}
       error={error}
+      viewBoxPayments={viewBoxPayments}
+      dialogDelete={dialogDelete}
+      handleDeleteBox={handleDeleteBox}
+      handlerCancelDelete={handlerCancelDelete}
+      boxToDelete={boxToDelete}
+      handleConfirmBoxDelete={handleConfirmBoxDelete}
     />
   )
 }

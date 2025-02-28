@@ -34,7 +34,12 @@ export const boxSlice = createSlice({
             state.loading = false
             state.error = ''
         },
+        removeBox: (state, { payload }) => {
+            state.loading = false
+            state.error = ''
+            state.boxes = state.boxes.filter(box => box._id !== payload)
+        },
     }
 })
 
-export const { setBoxes, setYears, setLoading, setError, cleanBox } = boxSlice.actions
+export const { setBoxes, setYears, setLoading, setError, cleanBox, removeBox } = boxSlice.actions

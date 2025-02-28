@@ -1,10 +1,16 @@
 import PropTypes from 'prop-types'
-import { Box, Button, Card, CardActions, CardContent, FormControl, FormHelperText, MenuItem, Select, Typography, useMediaQuery } from '@mui/material'
+import { Box, Button, Card, CardActions, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormHelperText, MenuItem, Select, Typography, useMediaQuery } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Loading } from '../../../../../../components/Loading'
 import { numberFormatMiles } from '../../../../../../utils/dateUtils'
 
-export const List = ({ loading, error, handlerCloseBox, handlerNewBox, handlerNewPayment, boxes, years, handleChangeYearSelected, yearSelected }) => {
+
+export const List = ({
+  loading, error, handlerCloseBox, handlerNewBox, handlerNewPayment, boxes, years,
+  handleChangeYearSelected, yearSelected, viewBoxPayments, dialogDelete,
+  handleDeleteBox, handlerCancelDelete, boxToDelete, handleConfirmBoxDelete
+}) => {
 
   const isNonMobile = useMediaQuery("(min-width:600px)")
 
@@ -54,20 +60,29 @@ export const List = ({ loading, error, handlerCloseBox, handlerNewBox, handlerNe
 
       {
         boxes.map(({ _id, name, status, description, creation_date, close_date, cashflow }) => (
-          <Card key={_id} sx={{ gridColumn: "span 1", "&:hover": { boxShadow: 10 }, cursor: 'pointer' }}>
+          <Card
+            key={_id}
+            sx={{ gridColumn: "span 1", "&:hover": { boxShadow: 10 } }}
+          >
+            <Box display='flex' justifyContent='flex-end' p={1} sx={{ cursor: 'pointer' }}  >
+              <DeleteIcon onClick={() => handleDeleteBox(_id, name)} />
+            </Box>
 
-            <CardContent onClick={status === 'open' ? () => handlerNewPayment(_id) : null}>
+            <CardContent
+              onClick={() => viewBoxPayments(_id)}
+              sx={{ cursor: 'pointer' }}
+            >
 
               <Typography color={status === 'open' ? 'success' : 'textDisabled'} gutterBottom sx={{ fontSize: 14, textAlign: 'end' }}>
                 {status === 'open' ? 'abierta' : 'cerrada'}
               </Typography>
 
-              <Box display='flex' justifyContent='space-between'> 
+              <Box display='flex' justifyContent='space-between'>
                 <Typography variant="h5" component="div" sx={{ fontSize: 18 }} color={status === 'open' ? 'primary' : 'textDisabled'}  >
                   {name.toUpperCase()}
                 </Typography>
                 <Typography variant="h5" component="div" sx={{ fontSize: 18 }} color={status === 'open' ? 'primary' : 'textDisabled'} >
-                  { numberFormatMiles(cashflow.total_balance)}
+                  {numberFormatMiles(cashflow.total_balance)}
                 </Typography>
 
               </Box>
@@ -82,12 +97,14 @@ export const List = ({ loading, error, handlerCloseBox, handlerNewBox, handlerNe
 
             </CardContent>
 
-            <CardActions>
+            <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
               {status === 'open' ?
                 <Button size="small" color='secondary' onClick={handlerCloseBox} >cerrar</Button>
                 :
                 <Typography variant='body2' color={'textDisabled'}> Cerrada el {close_date} </Typography>
               }
+
+              <Button size="small" color='success' onClick={status === 'open' ? () => handlerNewPayment(_id) : null} >agregar nuevo pago</Button>
             </CardActions>
 
           </Card>
@@ -110,6 +127,22 @@ export const List = ({ loading, error, handlerCloseBox, handlerNewBox, handlerNe
         </CardContent>
       </Card>
 
+      <Dialog
+        open={dialogDelete}
+        keepMounted
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{`¿Desea eliminar la caja ${boxToDelete?.name} ?`}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Una vez eliminada no se podra volver a recuperar.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handlerCancelDelete}>Disagree</Button>
+          <Button onClick={handleConfirmBoxDelete}>Agree</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }
@@ -124,4 +157,10 @@ List.propTypes = {
   yearSelected: PropTypes.number,
   loading: PropTypes.bool,
   error: PropTypes.string,
+  viewBoxPayments: PropTypes.func,
+  dialogDelete: PropTypes.bool,
+  handlerCancelDelete: PropTypes.func,
+  handleDeleteBox : PropTypes.func,
+  boxToDelete: PropTypes.object,
+  handleConfirmBoxDelete : PropTypes.func,
 }

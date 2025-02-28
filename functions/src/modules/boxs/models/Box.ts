@@ -16,4 +16,13 @@ const BoxSchema: Schema = new Schema({
     close_date: { type: Date, required: false },
 })
 
+BoxSchema.pre('deleteOne', { document: true, query: false }, async function (next) {
+    try { 
+        await mongoose.model('Payment').deleteMany({ box: this._id }).exec()
+        next()
+    } catch (error) {
+        next(error as mongoose.CallbackError)
+    }
+})
+
 export default mongoose.model<IBox>("Box", BoxSchema);

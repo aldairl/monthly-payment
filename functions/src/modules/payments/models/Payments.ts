@@ -84,4 +84,13 @@ PaymentSchema.virtual('concepts', {
     foreignField: 'payment_id', // Campo en ConceptPayment
 })
 
+PaymentSchema.pre('deleteOne', { document: true, query: false }, async function (next) {
+    try {
+        await mongoose.model('PaymentConcept').deleteMany({ payment_id: this._id }).exec()
+        next()
+    } catch (error) {
+        next(error as mongoose.CallbackError)
+    }
+})
+
 export default mongoose.model<IPayment>('Payment', PaymentSchema)
