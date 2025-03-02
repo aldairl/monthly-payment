@@ -4,6 +4,7 @@ export interface IPaymentConcept extends Document {
     concept_id: Types.ObjectId
     payment_id: Types.ObjectId
     month: string
+    year: string
     amount: number
     creation_date: Date
 }
@@ -20,6 +21,10 @@ const PaymentConceptSchema: Schema<IPaymentConcept> = new Schema({
         ref: 'Payment'
     },
     month: {
+        type: String,
+        required: true,
+    },
+    year: {
         type: String,
         required: true,
     },
