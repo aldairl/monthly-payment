@@ -11,5 +11,6 @@ beneficiaryRouter.get("/get-by-dni/:id", authenticateJWT, beneficiaryController.
 beneficiaryRouter.post("/", authenticateJWT, beneficiaryController.createBeneficiary)
 beneficiaryRouter.put("/:id", authenticateJWT, beneficiaryController.updateBeneficiary)
 beneficiaryRouter.delete("/:id", authenticateJWT, beneficiaryController.deleteBeneficiary)
+beneficiaryRouter.get("/last/:cc", authenticateJWT, beneficiaryController.getBeneficiaryAndLastPaymnet)
 
 export default beneficiaryRouter

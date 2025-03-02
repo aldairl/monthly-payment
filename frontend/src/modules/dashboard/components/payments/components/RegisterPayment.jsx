@@ -8,7 +8,7 @@ import { ShowPayment } from './list/ShowPayment';
 
 
 export const RegisterPayment = ({
-    handleFormSubmit, initialValues, checkoutSchema, conceptList, months, boxes,
+    handleFormSubmit, initialValues, checkoutSchema, conceptList, months, years,boxes,
     beneficiarySelected, loading, paymentCreated, handleClose, openDialog, handleNewPayment
 }) => {
     const isNonMobile = useMediaQuery("(min-width:600px)")
@@ -139,7 +139,7 @@ export const RegisterPayment = ({
                                                             value={values.concepts[index]?.month || ''}
                                                             select
                                                             sx={{
-                                                                gridColumn: "span 2",
+                                                                gridColumn: "span 1",
                                                                 '& .MuiInputBase-input': {
                                                                     padding: 1,
                                                                 }
@@ -148,6 +148,31 @@ export const RegisterPayment = ({
                                                             {
                                                                 months.map(({ name }, index) => (
                                                                     <MenuItem key={name} value={name} selected={(index === 0)} >
+                                                                        {name}
+                                                                    </MenuItem>
+                                                                ))
+                                                            }
+                                                        </TextField>
+                                                        
+                                                        <TextField
+                                                            fullWidth
+                                                            variant="outlined"
+                                                            type="text"
+                                                            label="Año"
+                                                            onChange={handleChange}
+                                                            name={`concepts.${index}.year`}
+                                                            value={values.concepts[index]?.year || ''}
+                                                            select
+                                                            sx={{
+                                                                gridColumn: "span 1",
+                                                                '& .MuiInputBase-input': {
+                                                                    padding: 1,
+                                                                }
+                                                            }}
+                                                        >
+                                                            {
+                                                                years.map(({name}, index) => (
+                                                                    <MenuItem key={index} value={name} selected={(index === 0)} >
                                                                         {name}
                                                                     </MenuItem>
                                                                 ))
@@ -170,6 +195,7 @@ export const RegisterPayment = ({
                                                                 }
                                                             }}
                                                         />
+                                                        
                                                         <Box display="flex" justifyContent="center">
 
                                                             <Button
@@ -190,7 +216,7 @@ export const RegisterPayment = ({
                                                 <Button
                                                     variant='outlined'
                                                     className="secondary"
-                                                    onClick={() => push({ concept_id: conceptList[0]['_id'] || '', amount: 30000, month: months[new Date().getMonth()].name || '' })}
+                                                    onClick={() => push({ concept_id: conceptList[0]['_id'] || '', amount: 30000, month: months[new Date().getMonth()].name || '', year: years[1].name || '' })}
                                                 >
                                                     Agregar concepto
                                                 </Button>
@@ -260,6 +286,7 @@ RegisterPayment.propTypes = {
     boxes: PropTypes.array,
     conceptList: PropTypes.array,
     months: PropTypes.array,
+    years: PropTypes.array,
     loading: PropTypes.bool,
     openDialog: PropTypes.bool,
     paymentCreated: PropTypes.object,

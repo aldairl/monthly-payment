@@ -77,4 +77,13 @@ export class BeneficiaryController {
             responses.error(req, res, error)
         }
     }
+
+    async getBeneficiaryAndLastPaymnet(req: Request, res: Response): Promise<void> {
+        try {
+            const beneficiary = await beneficiaryService.getBeneficiaryandLastPayment(req.params.cc)
+            responses.success(req, res, beneficiary)
+        } catch (error) {
+            responses.error(req, res, error)
+        }
+    }
 }

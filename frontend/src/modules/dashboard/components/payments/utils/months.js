@@ -12,3 +12,9 @@ export const MONTHS = [
     { name: 'Noviembre' },
     { name: 'Diciembre' },
 ]
+
+export const YEARS = () => {
+    const currentYear = new Date().getFullYear()
+    const YEARS = [{ name: currentYear - 1 }, { name: currentYear }, { name: currentYear + 1 }]
+    return YEARS
+}

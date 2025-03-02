@@ -1,7 +1,7 @@
 import { RegisterPayment } from "./RegisterPayment"
 import { useDispatch, useSelector } from "react-redux"
 import * as yup from "yup"
-import { MONTHS } from "../utils/months"
+import { MONTHS, YEARS } from "../utils/months"
 import { useEffect, useState } from "react"
 import { getConceptList } from "../../../store/dashThunks"
 import { clean } from "../store/paymentSlice"
@@ -78,6 +78,7 @@ export const RegisterPaymentContainer = () => {
             checkoutSchema={checkoutSchema}
             conceptList={conceptList}
             months={MONTHS}
+            years={YEARS()}
             boxes={boxes}
             beneficiarySelected={beneficiarySelected}
             loading={loading}
