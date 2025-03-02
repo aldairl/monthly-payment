@@ -40,6 +40,20 @@ export class BeneficiaryController {
         }
     }
 
+
+    async getBeneficiaryBySearch(req: Request, res: Response): Promise<void> {
+        try {
+            const beneficiary = await beneficiaryService.getBeneficiaryByDniOrName(req.params.search)
+            if (beneficiary) {
+                responses.success(req, res, beneficiary)
+            } else {
+                responses.error(req, res, { message: "Beneficiary not found" })
+            }
+        } catch (error) {
+            responses.error(req, res, error)
+        }
+    }
+
     async createBeneficiary(req: Request, res: Response): Promise<void> {
         try {
             const { name, lastname, identification, birthdate, temple, cellphone } = req.body
@@ -80,7 +94,7 @@ export class BeneficiaryController {
 
     async getBeneficiaryAndLastPaymnet(req: Request, res: Response): Promise<void> {
         try {
-            const beneficiary = await beneficiaryService.getBeneficiaryandLastPayment(req.params.cc)
+            const beneficiary = await beneficiaryService.getBeneficiaryandLastPayment(req.params.search)
             responses.success(req, res, beneficiary)
         } catch (error) {
             responses.error(req, res, error)

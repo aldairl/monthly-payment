@@ -28,13 +28,29 @@ export class BeneficiaryService {
         return { deleted: result !== null }
     }
 
-    async getBeneficiaryandLastPayment(cc: string): Promise<any | null> {
+    async getBeneficiaryByDniOrName(dniOrName: string) {
+        const query = {
+            $or: [
+                { dni: dniOrName },  // Coincidencia exacta en dni
+                { name: { $regex: dniOrName, $options: 'i' } }  // Búsqueda parcial y case insensitive en name
+            ]
+        };
+
+        const beneficiaries = await BeneficiaryModel.find(query);
+        return beneficiaries
+    }
+
+    async getBeneficiaryandLastPayment(dniOrName: string): Promise<any | null> {
         // seaech beneficiary
-
-        const lastPayment = await BeneficiaryModel.aggregate([
-
-            { $match: { 'identification': cc } }, // Filtrar por identificación del beneficiario            
-            // Relacionar con "payments" usando "payer"
+        const pipeline: any[] = [
+            {
+                $match: {
+                    $or: [
+                        { dni: dniOrName }, // Coincidencia exacta en dni
+                        { name: { $regex: dniOrName, $options: 'i' } } // Coincidencia parcial y case-insensitive en name
+                    ]
+                }
+            },
             {
                 $lookup: {
                     from: 'payments', // Nombre de la colección "payments"
@@ -99,28 +115,9 @@ export class BeneficiaryService {
                     }
                 }
             },
+        ]
 
-            // // Seleccionar los campos a devolver
-            // {
-            //     $project: {
-            //         amount: 1,
-            //         type: 1,
-            //         creation_date: 1,
-            //         'payer._id': 1,
-            //         'payer.name': 1,
-            //         'payer.lastname': 1,
-            //         'payer.identification': 1,
-            //         'payer.temple': 1,
-            //         'payer.cellphone': 1,
-            //         'box.name': 1, // Suponiendo que "box" tiene un campo "name"
-            //         'box.location': 1, // Otro campo ejemplo de "box"
-            //         'concepts.concept_id': 1,
-            //         'concepts.amount': 1,
-            //         'concepts.month': 1,
-            //         'concepts.details.name': 1 // Nombre del concepto desde "concepts"
-            //     }
-            // }
-        ])
+        const lastPayment = await BeneficiaryModel.aggregate(pipeline)
 
         return lastPayment
     }

@@ -6,7 +6,7 @@ export const getBeneficiaryByDNI = (identification) => {
     return async (dispatch) => {
         dispatch(setLoading(true))
 
-        const url = `${VITE_API_URL}/beneficiaries/get-by-dni/${identification}`
+        const url = `${VITE_API_URL}/beneficiaries/get-by-search/${identification}`
 
         try {
             const { body } = await fetchData(url)
