@@ -59,15 +59,14 @@ export const GetUser = ({ onSearch, beneficiaries, identification, loading, erro
                                     Celular: {beneficiary.cellphone}
                                 </Typography>
                                 <Typography color='primary'>
-                                    Ultimo pago: { getLocalDate(beneficiary.lastPayment) }
+                                    Ultimo pago: { beneficiary.lastPayment?.creation_date ? getLocalDate(beneficiary.payments[0]?.creation_date): 'No registra' }
                                 </Typography>
                                 <Typography color='primary'>
-                                    Registrado en { beneficiary.box }
+                                    Registrado en { beneficiary.box?.name || 'No registra' }
                                 </Typography>
                                 <Typography color='textPrimary'>
                                     { beneficiary.concepts }
                                 </Typography>
-
 
                             </CardContent>
                         </Card>

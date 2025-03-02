@@ -61,7 +61,41 @@ export class BeneficiaryService {
             },
             { $sort: { 'payments.creation_date': -1 } }, // Ordenar por fecha de creación descendente
             { $limit: 1 }, // Obtener solo el último pago
-
+            {
+                $unwind: {
+                    path: '$payments',
+                    preserveNullAndEmptyArrays: true
+                }
+            }, 
+            {
+                $set: {
+                    lastPayment: {
+                        $ifNull: ['$payments', {}]  // O {} si prefieres un objeto vacío
+                    }
+                }
+            },
+            // Relacionar con boxes usando "box_id" de "Payments" con "_id" de "boxes"
+            {
+                $lookup: {
+                    from: 'boxes', // Nombre de la colección de cajas
+                    localField: 'payments.box_id', // ID de la caja en Payments
+                    foreignField: '_id', // Campo de referencia en boxes
+                    as: 'box'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$box',
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $set: {
+                    lastPayment: {
+                        $ifNull: ['$box', {}]  // O {} si prefieres un objeto vacío
+                    }
+                }
+            },
             // Relacionar con "paymentconcepts" usando "id" de "Payments" con "payment_id"
             {
                 $lookup: {

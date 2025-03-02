@@ -34,13 +34,13 @@ export const getLastBeneficiaryPayment = (search) => {
                 return dispatch(setError(body.error))
             }
             
-            const { payer, box, creation_date, concepts} = body[0]
+            // const { payer, box, creation_date, concepts} = body[0]
 
-            const conceptString =  concepts.map( ({ month, details, amount }) => `concepto: ${details.name}, ${month}, valor: ${amount}` ).join('\n')
+            // const conceptString =  concepts.map( ({ month, details, amount }) => `concepto: ${details.name}, ${month}, valor: ${amount}` ).join('\n')
 
-            const beneficiaryLastPaymentInfo = [{ ...payer, lastPayment: creation_date, concepts: conceptString, box: box.name }]
+            // const beneficiaryLastPaymentInfo = [{ ...payer, lastPayment: creation_date, concepts: conceptString, box: box.name }]
 
-            dispatch(setBeneficiaries(beneficiaryLastPaymentInfo))
+            dispatch(setBeneficiaries(body))
 
         } catch (error) {
             console.log(error)
