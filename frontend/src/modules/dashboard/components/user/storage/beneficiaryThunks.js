@@ -21,11 +21,11 @@ export const getBeneficiaryByDNI = (identification) => {
     }
 }
 
-export const getLastBeneficiaryPayment = (identification) => {
+export const getLastBeneficiaryPayment = (search) => {
     return async (dispatch) => {
         dispatch(setLoading(true))
         
-        const url = `${VITE_API_URL}/payments/last/${identification}`
+        const url = `${VITE_API_URL}/beneficiaries/last/${search}`
         
         try {
             const { body, success } = await fetchData(url)

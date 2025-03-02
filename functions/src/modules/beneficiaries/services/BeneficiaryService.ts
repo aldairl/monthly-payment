@@ -46,7 +46,7 @@ export class BeneficiaryService {
             {
                 $match: {
                     $or: [
-                        { dni: dniOrName }, // Coincidencia exacta en dni
+                        { identification: dniOrName }, // Coincidencia exacta en dni
                         { name: { $regex: dniOrName, $options: 'i' } } // Coincidencia parcial y case-insensitive en name
                     ]
                 }
@@ -59,12 +59,6 @@ export class BeneficiaryService {
                     as: 'payments'
                 }
             },
-            {
-                $unwind: {
-                    path: '$payments',
-                    preserveNullAndEmptyArrays: true
-                }
-            }, // Convertir array en objeto
             { $sort: { 'payments.creation_date': -1 } }, // Ordenar por fecha de creación descendente
             { $limit: 1 }, // Obtener solo el último pago
 
