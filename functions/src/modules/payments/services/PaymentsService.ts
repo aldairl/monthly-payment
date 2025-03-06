@@ -106,7 +106,7 @@ export class PaymentService {
             { $match: { 'payer.identification': cc } }, // Filtrar por identificación del payer
             { $sort: { creation_date: -1 } }, // Ordenar por fecha de creación (descendente)
             { $limit: 1 }, // Solo traer el último pago
-        
+
             // Relacionar con "boxes" usando "box_id"
             {
                 $lookup: {
@@ -117,7 +117,7 @@ export class PaymentService {
                 }
             },
             { $unwind: '$box' }, // Convertir array en objeto
-        
+
             // Relacionar con "paymentconcepts" usando "id" de "Payments" con "payment_id"
             {
                 $lookup: {
@@ -127,7 +127,7 @@ export class PaymentService {
                     as: 'concepts'
                 }
             },
-        
+
             // Relacionar con "concepts" para obtener el nombre del concepto
             {
                 $lookup: {
@@ -137,7 +137,7 @@ export class PaymentService {
                     as: 'conceptDetails'
                 }
             },
-        
+
             // Unir los detalles de conceptos a cada concepto en el array
             {
                 $addFields: {
@@ -165,7 +165,7 @@ export class PaymentService {
                     }
                 }
             },
-        
+
             // Seleccionar los campos a devolver
             {
                 $project: {
@@ -189,5 +189,88 @@ export class PaymentService {
         ])
 
         return lastPayment
+    }
+
+    async getPaymentDetailsByBox(id: string): Promise<any> {
+        const boxId = new mongoose.Types.ObjectId(id)
+
+        return await Payment.aggregate([
+            {
+                $match: { box: boxId }   // Filtra los pagos de la box
+            },
+            {
+                $lookup: {
+                    from: 'beneficiaries',
+                    localField: 'payer',
+                    foreignField: '_id',
+                    as: 'payerInfo'
+                }
+            },
+            { $unwind: '$payerInfo' },   // Extrae la info del payer
+            {
+                $lookup: {
+                    from: 'paymentconcepts',
+                    localField: '_id',
+                    foreignField: 'payment_id',
+                    as: 'conceptPayments'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'concepts',
+                    localField: 'conceptPayments.concept_id',
+                    foreignField: '_id',
+                    as: 'concepts'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'boxes',
+                    localField: 'box',
+                    foreignField: '_id',
+                    as: 'boxInfo'
+                }
+            },
+            { $unwind: '$boxInfo' },  // Solo es una box
+            {
+                $project: {
+                    _id: 0,
+                    amount: 1,
+                    type: 1,
+                    payer: { $concat: ['$payerInfo.name', ' ', { $ifNull: ['$payerInfo.last_name', ''] }] },
+                    concepts: { $map: { input: '$concepts', as: 'c', in: '$$c.name' } },
+                    box: '$boxInfo.name',
+                    creation_date: 1,
+                    months: { $map: { input: '$conceptPayments', as: 'cp', in: '$$cp.month' } },
+                    years: { $map: { input: '$conceptPayments', as: 'cp', in: { $toString: '$$cp.year' } } }
+                }
+            },
+            {
+                $addFields: {
+                    concepts: {
+                        $reduce: {
+                            input: "$concepts",
+                            initialValue: "",
+                            in: { $concat: ["$$value", { $cond: [{ $eq: ["$$value", ""] }, "", ", "] }, "$$this"] }
+                        }
+                    },
+                    months: {
+                        $reduce: {
+                            input: "$months",
+                            initialValue: "",
+                            in: { $concat: ["$$value", { $cond: [{ $eq: ["$$value", ""] }, "", ", "] }, "$$this"] }
+                        }
+                    },
+                    years: {
+                        $reduce: {
+                            input: "$years",
+                            initialValue: "",
+                            in: { $concat: ["$$value", { $cond: [{ $eq: ["$$value", ""] }, "", ", "] }, "$$this"] }
+                        }
+                    }
+
+                }
+            }
+        ])
     }
 }

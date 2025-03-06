@@ -38,6 +38,104 @@ export class ConceptService {
     }
 
     async getConceptsByPayment(paymentId: string): Promise<IConcept[]> {
-        return await PaymentConcepts.find({ payment_id : paymentId })
+        return await PaymentConcepts.find({ payment_id: paymentId })
+    }
+
+    async getTotalPaymentConceptsByBox(id: string): Promise<any> {
+
+        const boxId = new mongoose.Types.ObjectId(id)
+        const incomes = await PaymentConcepts.aggregate(
+            [
+                {
+                    $addFields: {
+                        payment_id: { $toObjectId: "$payment_id" }  // Forzamos a ObjectId
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'payments',
+                        localField: 'payment_id',
+                        foreignField: '_id',
+                        as: 'payment'
+                    }
+                },
+                {
+                    $unwind: '$payment'
+                },
+                {
+                    $match: {
+                        'payment.box': boxId,
+                        'payment.type': 'income'
+                    }
+                },
+                // 3. Hacer lookup para traer la información del concepto
+                {
+                    $lookup: {
+                        from: 'concepts',
+                        localField: 'concept_id',
+                        foreignField: '_id',
+                        as: 'concept'
+                    }
+                },
+                {
+                    $unwind: '$concept'
+                },
+                // 4. Agrupar por concepto y sumar los montos
+                {
+                    $group: {
+                        _id: '$concept.name',
+                        totalAmount: { $sum: '$amount' }
+                    }
+                },
+            ]
+        )
+
+        const expenses = await PaymentConcepts.aggregate(
+            [
+                {
+                    $addFields: {
+                        payment_id: { $toObjectId: "$payment_id" }  // Forzamos a ObjectId
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'payments',
+                        localField: 'payment_id',
+                        foreignField: '_id',
+                        as: 'payment'
+                    }
+                },
+                {
+                    $unwind: '$payment'
+                },
+                {
+                    $match: {
+                        'payment.box': boxId,
+                        'payment.type': 'expense'
+                    }
+                },
+                // 3. Hacer lookup para traer la información del concepto
+                {
+                    $lookup: {
+                        from: 'concepts',
+                        localField: 'concept_id',
+                        foreignField: '_id',
+                        as: 'concept'
+                    }
+                },
+                {
+                    $unwind: '$concept'
+                },
+                // 4. Agrupar por concepto y sumar los montos
+                {
+                    $group: {
+                        _id: '$concept.name',
+                        totalAmount: { $sum: '$amount' }
+                    }
+                },
+            ]
+        )
+
+        return { incomes, expenses }
     }
 }

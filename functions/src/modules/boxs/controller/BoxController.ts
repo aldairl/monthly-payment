@@ -65,4 +65,17 @@ export class BoxController {
             responses.error(req, res, error)
         }
     }
+
+    async getBoxDetails(req: Request, res: Response): Promise<void> {
+        try {
+            const box = await boxService.getBoxpayemntDetails(req.params.id);
+            if (box) {
+                responses.success(req, res, box)
+            } else {
+                responses.error(req, res, { message: "Box not found" })
+            }
+        } catch (error) {
+            responses.error(req, res, error)
+        }
+    }
 }
