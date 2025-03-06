@@ -5,7 +5,8 @@ const initialState = {
     years: [],
     loading: false,
     error: '',
-    message: ''
+    message: '',
+    boxPayments: []
 }
 
 export const boxSlice = createSlice({
@@ -51,7 +52,12 @@ export const boxSlice = createSlice({
             state.error = ''
             state.message = 'Caja agregada correctamente'
         },
+        setBoxPayments: (state, { payload }) => {
+            state.boxPayments = payload
+            state.loading = false
+            state.error = ''
+        }
     }
 })
 
-export const { setBoxes, setYears, setLoading, setError, cleanBox, removeBox, cleanBoxVariables, addBox } = boxSlice.actions
+export const { setBoxes, setYears, setLoading, setError, cleanBox, removeBox, cleanBoxVariables, addBox, setBoxPayments } = boxSlice.actions
