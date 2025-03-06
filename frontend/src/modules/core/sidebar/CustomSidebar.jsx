@@ -72,12 +72,7 @@ export const CustomSidebar = ({ collapsed, toggled, hasImage, theme, menuItemSty
               <MenuItem component={ <Link to='/dash/concepts/list' /> }> lista de conceptos</MenuItem>
             </SubMenu>
 
-            <SubMenu label="Theme" icon={<BrushIcon />}>
-              <MenuItem> Dark</MenuItem>
-              <MenuItem> Light</MenuItem>
-            </SubMenu>
-
-            <SubMenu label="Components" icon={<DiamondIcon />}>
+            <SubMenu label="Beneficiarios" icon={<DiamondIcon />}>
               <MenuItem> Grid</MenuItem>
               <MenuItem> Layout</MenuItem>
               <SubMenu label="Forms">
@@ -90,12 +85,17 @@ export const CustomSidebar = ({ collapsed, toggled, hasImage, theme, menuItemSty
               </SubMenu>
             </SubMenu>
 
-            <SubMenu label="E-commerce" icon={<ShoppingCartIcon />}>
+            <SubMenu label="Informes" icon={<ShoppingCartIcon />}>
               <MenuItem component={<Link to='/' />} > Product</MenuItem>
               <MenuItem> Orders</MenuItem>
               <MenuItem> Credit card</MenuItem>
             </SubMenu>
 
+            <SubMenu label="Theme" icon={<BrushIcon />}>
+              <MenuItem> Dark</MenuItem>
+              <MenuItem> Light</MenuItem>
+            </SubMenu>
+            
           </Menu>
 
           <div style={{ padding: '0 24px', marginBottom: '8px', marginTop: '32px' }}>

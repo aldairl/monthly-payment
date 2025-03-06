@@ -78,7 +78,7 @@ export class BeneficiaryService {
             {
                 $lookup: {
                     from: 'boxes', // Nombre de la colección de cajas
-                    localField: 'payments.box_id', // ID de la caja en Payments
+                    localField: 'payments.box', // ID de la caja en Payments
                     foreignField: '_id', // Campo de referencia en boxes
                     as: 'box'
                 }

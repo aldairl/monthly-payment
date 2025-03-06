@@ -8,8 +8,11 @@ export class CashFlowService {
         const balanceChange = type === 'income' ? amount : -amount;
 
         try {
-            const cashSaved = await CashFlow.findByIdAndUpdate(
-                boxId,
+
+            console.log(`Actualizando cash flow para ${boxId}-${amount}-${type}`)
+
+            const cashSaved = await CashFlow.findOneAndUpdate(
+                { box: boxId },
                 {
                     $inc: { [updateField]: amount, total_balance: balanceChange },
                 },

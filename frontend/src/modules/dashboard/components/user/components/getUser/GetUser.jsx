@@ -48,7 +48,7 @@ export const GetUser = ({ onSearch, beneficiaries, identification, loading, erro
                                         {beneficiary.name[0]}
                                     </Avatar>
                                 }
-                                title={`${beneficiary.name} ${beneficiary.lastname}`}
+                                title={`${beneficiary.name} ${beneficiary.lastname ?? ''}`}
                                 subheader={beneficiary.identification}
                             />
                             <CardContent>
@@ -59,13 +59,13 @@ export const GetUser = ({ onSearch, beneficiaries, identification, loading, erro
                                     Celular: {beneficiary.cellphone}
                                 </Typography>
                                 <Typography color='primary'>
-                                    Ultimo pago: { beneficiary.lastPayment?.creation_date ? getLocalDate(beneficiary.payments[0]?.creation_date): 'No registra' }
+                                    Ultimo pago: { beneficiary.payments?.creation_date ? getLocalDate(beneficiary.payments?.creation_date): 'No registra' }
                                 </Typography>
                                 <Typography color='primary'>
                                     Registrado en { beneficiary.box?.name || 'No registra' }
                                 </Typography>
                                 <Typography color='textPrimary'>
-                                    { beneficiary.concepts }
+                                    { beneficiary.concepts.map( ({details, month}) => `${details.name} ${month}` ) }
                                 </Typography>
 
                             </CardContent>

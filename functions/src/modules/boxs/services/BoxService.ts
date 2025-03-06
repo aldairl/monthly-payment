@@ -41,7 +41,9 @@ export class BoxService {
     }
 
     async deleteBox(id: string): Promise<object> {
-        const result = await Box.deleteOne({id})
+        console.log('Deleting in service box:', id)
+
+        const result = await Box.findOneAndDelete({_id: id})
         return { deleted: result !== null }
     }
 }

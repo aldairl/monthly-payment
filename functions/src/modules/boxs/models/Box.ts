@@ -16,9 +16,21 @@ const BoxSchema: Schema = new Schema({
     close_date: { type: Date, required: false },
 })
 
-BoxSchema.pre('deleteOne', { document: true, query: false }, async function (next) {
+BoxSchema.pre('findOneAndDelete', async function (next) {
     try {
-        await mongoose.model('Payment').deleteMany({ box: this._id }).exec()
+
+
+        const boxId = this.getQuery()._id
+        console.log('Deleting box:', boxId)
+
+        // Delete beneficiay to box
+        await mongoose.model('Beneficiary').findOneAndDelete({ identification: boxId })
+
+        await mongoose.model('Payment').deleteMany({ box: boxId })
+
+        // delete cash flow
+        await mongoose.model('CashFlow').deleteOne({ box: boxId })
+
         next()
     } catch (error) {
         next(error as mongoose.CallbackError)
@@ -32,6 +44,13 @@ BoxSchema.post('save', async function (doc) {
             year: new Date().getFullYear(),
             month: new Date().getMonth() + 1
         })
+
+        // Create a beneficiay to box
+        await mongoose.model('Beneficiary').create({
+            name: doc.name,
+            identification: doc._id,
+        })
+
     } catch (error) {
         console.error('Error al crear cash flow:', error)
     }
