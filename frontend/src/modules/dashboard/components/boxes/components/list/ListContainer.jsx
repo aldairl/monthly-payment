@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { List } from './List'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteBox, getBoxes } from '../../store/thunks'
+import { deleteBox, getBoxes, getPaymentDetailsByBox } from '../../store/thunks'
 import { useNavigate } from 'react-router-dom'
 import { setBox } from '../../../payments/store/paymentSlice'
 
@@ -35,9 +35,9 @@ export const ListContainer = () => {
   }
 
   const viewBoxPayments = (boxId) => {
-    // dispatch(setBox(boxId))
-    // navigate('/dash/user/get-user')
     console.log('ver pagos de caja', boxId)
+    dispatch(getPaymentDetailsByBox(boxId))
+    navigate('/dash/box/details')
   }
 
   const handleDeleteBox = (boxId, name) => {

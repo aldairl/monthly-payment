@@ -193,8 +193,8 @@ export class PaymentService {
 
     async getPaymentDetailsByBox(id: string): Promise<any> {
         const boxId = new mongoose.Types.ObjectId(id)
-
-        return await Payment.aggregate([
+        
+        const paymentDetails = await Payment.aggregate([
             {
                 $match: { box: boxId }   // Filtra los pagos de la box
             },
@@ -234,15 +234,16 @@ export class PaymentService {
             { $unwind: '$boxInfo' },  // Solo es una box
             {
                 $project: {
-                    _id: 0,
+                    _id: 1,
                     amount: 1,
                     type: 1,
-                    payer: { $concat: ['$payerInfo.name', ' ', { $ifNull: ['$payerInfo.last_name', ''] }] },
+                    payer: { $concat: ['$payerInfo.name', ' ', { $ifNull: ['$payerInfo.lastname', ''] }] },
                     concepts: { $map: { input: '$concepts', as: 'c', in: '$$c.name' } },
                     box: '$boxInfo.name',
                     creation_date: 1,
                     months: { $map: { input: '$conceptPayments', as: 'cp', in: '$$cp.month' } },
-                    years: { $map: { input: '$conceptPayments', as: 'cp', in: { $toString: '$$cp.year' } } }
+                    years: { $map: { input: '$conceptPayments', as: 'cp', in: { $toString: '$$cp.year' } } },
+                    amounts: { $map: { input: '$conceptPayments', as: 'cp', in: { $toString: '$$cp.amount' } } }
                 }
             },
             {
@@ -267,10 +268,19 @@ export class PaymentService {
                             initialValue: "",
                             in: { $concat: ["$$value", { $cond: [{ $eq: ["$$value", ""] }, "", ", "] }, "$$this"] }
                         }
+                    },
+                    amounts: {
+                        $reduce: {
+                            input: "$amounts",
+                            initialValue: "",
+                            in: { $concat: ["$$value", { $cond: [{ $eq: ["$$value", ""] }, "", ", "] }, "$$this"] }
+                        }
                     }
 
                 }
             }
         ])
+
+        return paymentDetails
     }
 }

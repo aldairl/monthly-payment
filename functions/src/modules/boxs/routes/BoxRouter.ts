@@ -11,5 +11,6 @@ boxRouter.post("/", authenticateJWT, boxController.createBox)
 boxRouter.put("/:id", authenticateJWT, boxController.updateBox)
 boxRouter.delete("/:id", authenticateJWT, boxController.deleteBox)
 boxRouter.get("/details/:id", authenticateJWT, boxController.getBoxDetails)
+boxRouter.get("/balance/:id", authenticateJWT, boxController.getBoxBalance)
 
 export default boxRouter

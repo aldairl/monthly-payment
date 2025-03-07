@@ -64,14 +64,12 @@ export const List = ({
             key={_id}
             sx={{ gridColumn: "span 1", "&:hover": { boxShadow: 10 } }}
           >
-            <Box display='flex' justifyContent='flex-end' p={1} sx={{ cursor: 'pointer' }}  >
-              <DeleteIcon onClick={() => handleDeleteBox(_id, name)} />
+            <Box display='flex' justifyContent='space-between' p={1} >
+              <Typography sx={{ cursor: 'pointer' }}  variant='body1' color='success'  onClick={() => viewBoxPayments(_id)} > Ver pagos </Typography>
+              <DeleteIcon sx={{ cursor: 'pointer' }}  onClick={() => handleDeleteBox(_id, name)} />
             </Box>
 
-            <CardContent
-              onClick={() => viewBoxPayments(_id)}
-              sx={{ cursor: 'pointer' }}
-            >
+            <CardContent>
 
               <Typography color={status === 'open' ? 'success' : 'textDisabled'} gutterBottom sx={{ fontSize: 14, textAlign: 'end' }}>
                 {status === 'open' ? 'abierta' : 'cerrada'}

@@ -1,6 +1,6 @@
 import { VITE_API_URL } from "../../../../../config/variables"
 import { fetchData } from "../../../../../utils/fetch-request"
-import { addBox, removeBox, setBoxes, setBoxPayments, setError, setLoading } from "./boxSlice"
+import { addBox, removeBox, setBoxBalance, setBoxes, setBoxPayments, setError, setLoading } from "./boxSlice"
 
 export const getBoxes = (year = 2025) => {
     return async (dispatch) => {
@@ -84,6 +84,27 @@ export const getPaymentDetailsByBox = (boxId) => {
                 return dispatch(setError(body.error))
             }
             dispatch(setBoxPayments(body))
+        } catch (error) {
+            dispatch(setError(error.message || String(error)))
+        } finally {
+            dispatch(setLoading(false))
+        }
+    }
+}
+
+export const getBalanceByBox = (boxId) => {
+    return async (dispatch) => {
+        dispatch(setLoading(true))
+
+        const url = new URL(`${VITE_API_URL}/box/balance/${boxId}`)
+
+        try {
+            const { body, success } = await fetchData(url)
+
+            if (!success) {
+                return dispatch(setError(body.error))
+            }
+            dispatch(setBoxBalance(body))
         } catch (error) {
             dispatch(setError(error.message || String(error)))
         } finally {

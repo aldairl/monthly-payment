@@ -1,7 +1,8 @@
 import Box, { IBox } from "../models/Box";
 import { PaymentService } from "../../payments/services/PaymentsService"
+import { ConceptService } from "../../payments/services/ConceptService"
 
-// const conceptService = new ConceptService()
+const conceptService = new ConceptService()
 const paymentService = new PaymentService()
 
 export class BoxService {
@@ -54,5 +55,9 @@ export class BoxService {
     async getBoxpayemntDetails(id: string): Promise<IBox | null> {
         // return await conceptService.getTotalPaymentConceptsByBox(id)
         return await paymentService.getPaymentDetailsByBox(id)
+    }
+
+    async getBalanceByBox(id: string): Promise<IBox | null> {
+        return await conceptService.getTotalPaymentConceptsByBox(id)
     }
 }

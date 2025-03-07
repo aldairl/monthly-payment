@@ -6,7 +6,8 @@ const initialState = {
     loading: false,
     error: '',
     message: '',
-    boxPayments: []
+    boxPayments: [],
+    boxBalance: {},
 }
 
 export const boxSlice = createSlice({
@@ -56,8 +57,13 @@ export const boxSlice = createSlice({
             state.boxPayments = payload
             state.loading = false
             state.error = ''
-        }
+        },
+        setBoxBalance: (state, { payload }) => {
+            state.boxBalance = payload
+            state.loading = false
+            state.error = ''
+        },
     }
 })
 
-export const { setBoxes, setYears, setLoading, setError, cleanBox, removeBox, cleanBoxVariables, addBox, setBoxPayments } = boxSlice.actions
+export const { setBoxes, setYears, setLoading, setError, cleanBox, removeBox, cleanBoxVariables, addBox, setBoxPayments, setBoxBalance } = boxSlice.actions
