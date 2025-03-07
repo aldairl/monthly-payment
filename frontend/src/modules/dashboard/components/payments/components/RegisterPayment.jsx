@@ -5,6 +5,7 @@ import Divider from '@mui/material/Divider'
 import { FieldArray, Form, Formik } from "formik"
 import { Loading } from '../../../../../components/Loading';
 import { ShowPayment } from './list/ShowPayment';
+import { numberFormatMiles } from '../../../../../utils/dateUtils';
 
 
 export const RegisterPayment = ({
@@ -231,7 +232,7 @@ export const RegisterPayment = ({
 
                                     <Box display="flex" justifyContent="space-between" mt="20px">
 
-                                        <Typography variant='h3' color='success' > Total pago $ {values.concepts.reduce((total, current) => total + current.amount, 0)} </Typography>
+                                        <Typography variant='h3' color='success' > Total pago {numberFormatMiles(values.concepts.reduce((total, current) => total + current.amount, 0))} </Typography>
                                         <Button disabled={loading} type="submit" color="success" variant="contained">
                                             {!loading ? 'Guardar pago' : <Loading color='white' />}
                                         </Button>

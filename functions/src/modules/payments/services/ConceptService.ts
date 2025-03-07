@@ -82,9 +82,15 @@ export class ConceptService {
                 },
                 // 4. Agrupar por concepto y sumar los montos
                 {
+                    $addFields: {
+                        'concept.priority': { $ifNull: ['$concept.priority', 1] }
+                    }
+                },
+                {
                     $group: {
                         _id: '$concept.name',
-                        totalAmount: { $sum: '$amount' }
+                        totalAmount: { $sum: '$amount' },
+                        priority: { $first: '$concept.priority' }
                     }
                 },
             ]
@@ -128,9 +134,15 @@ export class ConceptService {
                 },
                 // 4. Agrupar por concepto y sumar los montos
                 {
+                    $addFields: {
+                        'concept.priority': { $ifNull: ['$concept.priority', 1] }
+                    }
+                },
+                {
                     $group: {
                         _id: '$concept.name',
-                        totalAmount: { $sum: '$amount' }
+                        totalAmount: { $sum: '$amount' },
+                        priority: { $first: '$concept.priority' }
                     }
                 },
             ]

@@ -9,11 +9,13 @@ import { cleanDashVariables } from "../../../store/dashSlice"
 const checkoutSchema = yup.object().shape({
     name: yup.string().required("required"),
     description: yup.string(),
+    priority: yup.number()
 })
 
 const initialValues = {
     name: '',
     description: '',
+    priority: 1
 }
 
 export const CreateConceptContainer = () => {

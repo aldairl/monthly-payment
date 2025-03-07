@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
-import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography, useMediaQuery } from '@mui/material'
+import { Box, List, ListItem, Table, TableBody, TableCell, TableHead, TableRow, Typography, useMediaQuery } from '@mui/material'
 import { numberFormatMiles } from '../../../../../../utils/dateUtils'
 import { Loading } from '../../../../../../components/Loading'
 
-export const BoxBalance = ({ boxBalance, loading, totalExpense, totalIncome }) => {
+export const BoxBalance = ({ boxBalance, loading, totalExpense, totalIncome, reportPaids, reportIncome }) => {
     const isNonMobile = useMediaQuery("(min-width:600px)")
 
     return (
@@ -83,7 +83,7 @@ export const BoxBalance = ({ boxBalance, loading, totalExpense, totalIncome }) =
                 </Typography>
 
                 <Typography variant="body1" fontWeight="bold" sx={{ fontSize: '18px', whiteSpace: 'pre' }} component='span' >
-                    {numberFormatMiles(totalIncome)} { '' }
+                    {numberFormatMiles(totalIncome)} {''}
                 </Typography>
 
                 <Typography sx={{ fontSize: '18px', whiteSpace: 'pre' }} component='span' >
@@ -94,6 +94,28 @@ export const BoxBalance = ({ boxBalance, loading, totalExpense, totalIncome }) =
                     {numberFormatMiles(totalIncome - totalExpense)}
                 </Typography>
             </Box>
+
+            <Box gridColumn='span 2' display='flex' justifyContent='center' alignItems='center' flexDirection='column' >
+
+                <List>
+                    {
+                        reportIncome.map(({ _id, totalAmount }, index) => (
+                            <ListItem key={index}>{_id} | {totalAmount}</ListItem>
+                        ))
+                    }
+
+                </List>
+
+                <List>
+                    {
+                        reportPaids.map((item, index) => (
+                            <ListItem key={index}>{item}</ListItem>
+                        ))
+                    }
+
+                </List>
+
+            </Box>
         </Box>
     )
 }
@@ -103,4 +125,6 @@ BoxBalance.propTypes = {
     loading: PropTypes.bool,
     totalExpense: PropTypes.number,
     totalIncome: PropTypes.number,
+    reportPaids: PropTypes.array,
+    reportIncome: PropTypes.array,
 }

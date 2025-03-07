@@ -54,6 +54,21 @@ export const CreateConcept = ({ handleFormSubmit, initialValues, checkoutSchema,
                                         helperText={touched.description && errors.description}
                                         sx={{ gridColumn: "span 3" }}
                                     />
+                                    
+                                    <TextField
+                                        fullWidth
+                                        variant="filled"
+                                        type="number"
+                                        label="Prioridad"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.priority}
+                                        name="priority"
+                                        error={!!touched.priority && !!errors.priority}
+                                        helperText={touched.priority && errors.priority}
+                                        sx={{ gridColumn: "span 3" }}
+                                        title='Se usa para saber la prioridad en los calculos, 1 es alta.'
+                                    />
 
                                 </Box>
 
