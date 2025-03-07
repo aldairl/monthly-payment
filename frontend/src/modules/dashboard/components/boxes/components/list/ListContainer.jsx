@@ -35,9 +35,12 @@ export const ListContainer = () => {
   }
 
   const viewBoxPayments = (boxId) => {
-    console.log('ver pagos de caja', boxId)
     dispatch(getPaymentDetailsByBox(boxId))
     navigate('/dash/box/details')
+  }
+
+  const viewBoxBalance = (boxId) => {
+    navigate(`/dash/box/balance/${boxId}`)
   }
 
   const handleDeleteBox = (boxId, name) => {
@@ -83,6 +86,7 @@ export const ListContainer = () => {
       handlerCancelDelete={handlerCancelDelete}
       boxToDelete={boxToDelete}
       handleConfirmBoxDelete={handleConfirmBoxDelete}
+      viewBoxBalance={viewBoxBalance}
     />
   )
 }

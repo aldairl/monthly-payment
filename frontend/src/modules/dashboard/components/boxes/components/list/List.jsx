@@ -9,7 +9,7 @@ import { numberFormatMiles } from '../../../../../../utils/dateUtils'
 export const List = ({
   loading, error, handlerCloseBox, handlerNewBox, handlerNewPayment, boxes, years,
   handleChangeYearSelected, yearSelected, viewBoxPayments, dialogDelete,
-  handleDeleteBox, handlerCancelDelete, boxToDelete, handleConfirmBoxDelete
+  handleDeleteBox, handlerCancelDelete, boxToDelete, handleConfirmBoxDelete, viewBoxBalance
 }) => {
 
   const isNonMobile = useMediaQuery("(min-width:600px)")
@@ -65,18 +65,22 @@ export const List = ({
             sx={{ gridColumn: "span 1", "&:hover": { boxShadow: 10 } }}
           >
             <Box display='flex' justifyContent='space-between' p={1} >
-              <Typography sx={{ cursor: 'pointer' }}  variant='body1' color='success'  onClick={() => viewBoxPayments(_id)} > Ver pagos </Typography>
-              <DeleteIcon sx={{ cursor: 'pointer' }}  onClick={() => handleDeleteBox(_id, name)} />
+              <Typography sx={{ cursor: 'pointer' }} variant='body1' color='success' onClick={() => viewBoxPayments(_id)} > Ver pagos </Typography>
+              <DeleteIcon sx={{ cursor: 'pointer' }} onClick={() => handleDeleteBox(_id, name)} />
             </Box>
 
-            <CardContent>
+            <CardContent 
+              onClick={() => viewBoxBalance(_id)}
+            >
 
               <Typography color={status === 'open' ? 'success' : 'textDisabled'} gutterBottom sx={{ fontSize: 14, textAlign: 'end' }}>
                 {status === 'open' ? 'abierta' : 'cerrada'}
               </Typography>
 
               <Box display='flex' justifyContent='space-between'>
-                <Typography variant="h5" component="div" sx={{ fontSize: 18 }} color={status === 'open' ? 'primary' : 'textDisabled'}  >
+                <Typography
+                  variant="h5" component="div" sx={{ fontSize: 18, cursor: 'pointer' }} color={status === 'open' ? 'primary' : 'textDisabled'}
+                >
                   {name.toUpperCase()}
                 </Typography>
                 <Typography variant="h5" component="div" sx={{ fontSize: 18 }} color={status === 'open' ? 'primary' : 'textDisabled'} >
@@ -158,7 +162,8 @@ List.propTypes = {
   viewBoxPayments: PropTypes.func,
   dialogDelete: PropTypes.bool,
   handlerCancelDelete: PropTypes.func,
-  handleDeleteBox : PropTypes.func,
+  handleDeleteBox: PropTypes.func,
   boxToDelete: PropTypes.object,
-  handleConfirmBoxDelete : PropTypes.func,
+  handleConfirmBoxDelete: PropTypes.func,
+  viewBoxBalance: PropTypes.func,
 }
