@@ -1,3 +1,5 @@
+import { logoutAndRedirect } from "./authUtils";
+
 export const fetchData = async (url, options = {}) => {
 
     const defaultOptions = {
@@ -20,6 +22,17 @@ export const fetchData = async (url, options = {}) => {
 
         if (!response.ok) {
             const data = await response.json()
+
+            if (response.status === 403) {
+                console.log('Acceso prohibido: Código 403')
+                logoutAndRedirect()
+            }
+            
+            if (data.error && data.error.toLowerCase().includes("jwt expired")) {
+                console.log('Token expirado: JWT expired')
+                logoutAndRedirect()
+            }
+
             throw new Error(`Error: ${data.error}`)
         }
         const data = await response.json()

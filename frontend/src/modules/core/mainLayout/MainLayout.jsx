@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from "react"
 import { CustomSidebarContainer } from "../sidebar/CustomSidebarContainer"
-import { Outlet } from "react-router-dom"
+import { Outlet, useNavigate } from "react-router-dom"
 import { Header } from "../header/Header"
 import { ColorModeContext } from "../../../../theme"
 import { useTheme } from "@mui/material"
+import { useSelector } from "react-redux"
 
 export const MainLayout = () => {
     const themMaterial = useTheme()
@@ -11,6 +12,9 @@ export const MainLayout = () => {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
     const [toggled, setToggled] = useState(false)
     const colorMode = useContext(ColorModeContext)
+
+    const { token, username } = useSelector(state => state.auth)
+    const navigate = useNavigate()
 
     const hasImage = true
 
@@ -21,6 +25,15 @@ export const MainLayout = () => {
     useEffect(() => {
         setTheme(themMaterial.palette.mode)
     }, [themMaterial])
+
+    useEffect(() => {
+
+        if (!token && !username) {
+            navigate('/auth')
+        }
+
+    }, [token, username, navigate])
+
 
     return (
         <div style={{ display: 'flex', height: '100vh', width: '100%' }}>
