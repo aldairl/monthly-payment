@@ -30,7 +30,22 @@ export const createUserController = async (req: Request, res: Response) => {
 
 export const healthController = async (req: Request, res: Response) => {
     try {
-        responses.success(req, res, {status: 'up', appName: APP_NAME})
+        responses.success(req, res, { status: 'up', appName: APP_NAME })
+    } catch (error) {
+        responses.error(req, res, error)
+    }
+}
+
+export const updateUserController = async (req: Request, res: Response) => {
+    try {
+        const { username, name, password, date, role } = req.body
+        const updatedUser = await authService.updateUser(req.params.id, { username, name, password, date, role })
+
+        if (updatedUser) {
+            responses.success(req, res, updatedUser)
+        } else {
+            responses.error(req, res, { message: "user not found" })
+        }
     } catch (error) {
         responses.error(req, res, error)
     }
