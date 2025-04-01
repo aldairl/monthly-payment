@@ -16,3 +16,13 @@ export const authenticateJWT = (req: AuthRequest, res: Response, next: NextFunct
         responses.error(req, res, error, 403)
     }
 }
+
+export const checkIsAdmin = (req: AuthRequest, res: Response, next: NextFunction): void => {
+    try {
+        const user = req.user as { role: string }
+        if (user.role !== 'admin') throw new Error('Access denied')
+        next()
+    } catch (error) {
+        responses.error(req, res, error, 403)
+    }
+}
