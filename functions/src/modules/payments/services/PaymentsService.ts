@@ -16,7 +16,13 @@ export class PaymentService {
     }
 
     async getPaymentById(id: string): Promise<IPayment | null> {
-        return await Payment.findById(id)
+
+        const concepts = await conceptService.getConceptsByPayment(id)
+        const payment = await Payment.findById(id)
+            .populate('payer', 'name lastname identification')
+            .populate('box', 'name')
+        
+        return { ...payment?.toObject(), concepts } as unknown as IPayment
     }
 
     async createPayment(paymentData: Partial<IPayment>, session: mongoose.ClientSession): Promise<IPayment> {
@@ -193,7 +199,7 @@ export class PaymentService {
 
     async getPaymentDetailsByBox(id: string): Promise<any> {
         const boxId = new mongoose.Types.ObjectId(id)
-        
+
         const paymentDetails = await Payment.aggregate([
             {
                 $match: { box: boxId }   // Filtra los pagos de la box
