@@ -244,6 +244,7 @@ export class PaymentService {
                     amount: 1,
                     type: 1,
                     payer: { $concat: ['$payerInfo.name', ' ', { $ifNull: ['$payerInfo.lastname', ''] }] },
+                    identification: '$payerInfo.identification',
                     concepts: { $map: { input: '$concepts', as: 'c', in: '$$c.name' } },
                     box: '$boxInfo.name',
                     creation_date: 1,
