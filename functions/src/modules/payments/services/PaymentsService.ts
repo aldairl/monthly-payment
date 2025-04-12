@@ -1,12 +1,12 @@
 import mongoose from "mongoose"
 import { CashFlowService } from "../../cashFlow/service/CashFlowService"
 import Payment, { IPayment } from "../models/Payments"
-import { ConceptService } from "./ConceptService"
+import { PaymentConceptService } from './PaymentConcepts'
 import { IPaymentConcept } from "../models/PaymentConcepts"
 // import { BeneficiaryService } from "../../beneficiaries/services/BeneficiaryService"
 
 const cashFlowService = new CashFlowService()
-const conceptService = new ConceptService()
+const paymentConceptService = new PaymentConceptService()
 
 // const beneficiaryService = new BeneficiaryService()
 
@@ -17,7 +17,7 @@ export class PaymentService {
 
     async getPaymentById(id: string): Promise<IPayment | null> {
 
-        const concepts = await conceptService.getConceptsByPayment(id)
+        const concepts = await paymentConceptService.getConceptsByPayment(id)
         const payment = await Payment.findById(id)
             .populate('payer', 'name lastname identification')
             .populate('box', 'name')
@@ -32,8 +32,8 @@ export class PaymentService {
         return paymentSaved[0]
     }
 
-    async updatePayment(id: string, updatedData: Partial<IPayment>): Promise<IPayment | null> {
-        const updated = await Payment.findByIdAndUpdate(id, updatedData, { new: true })
+    async updatePayment(id: string, updatedData: Partial<IPayment>, session: mongoose.ClientSession): Promise<IPayment | null> {
+        const updated = await Payment.findOneAndUpdate({_id: id}, updatedData, { new: true, session })
         return updated
     }
 
@@ -59,7 +59,7 @@ export class PaymentService {
             const result = await this.deletePayment(id, session)
 
             // delete payment concepts
-            await conceptService.deletePaymentConcepts(result.id, session)
+            await paymentConceptService.deletePaymentConcepts(result.id, session)
 
             // Update cash flow
             await cashFlowService.updateCashFlow(result.box, -Number(result.amount), result.type, session)
@@ -83,11 +83,31 @@ export class PaymentService {
             const paymentSaved = await this.createPayment(paymentData, session)
             await cashFlowService.updateCashFlow(paymentSaved.box, Number(paymentSaved.amount), paymentSaved.type, session)
 
-            await conceptService.createPaymentConcepts(paymentSaved.id, concepts, session)
+            await paymentConceptService.createPaymentConcepts(paymentSaved.id, concepts, session)
 
             await session.commitTransaction()
             session.endSession()
             return paymentSaved
+        } catch (error) {
+            await session.abortTransaction()
+            session.endSession()
+            throw error
+        }
+    }
+
+    async updatePaymentTransaction(id: string, paymentData: Partial<IPayment>, paymentConcepts: Partial<IPaymentConcept[]>) {
+        // start transaction
+        const session = await mongoose.startSession()
+        session.startTransaction()
+        try {
+            const paymentEdited = await this.updatePayment(id, paymentData, session)
+            if(paymentEdited){
+                await paymentConceptService.updateConceptsByPaymentId(paymentEdited._id as string, paymentConcepts, session)
+            }
+
+            await session.commitTransaction()
+            session.endSession()
+            return paymentEdited
         } catch (error) {
             await session.abortTransaction()
             session.endSession()

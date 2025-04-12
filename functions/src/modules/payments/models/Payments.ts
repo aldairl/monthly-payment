@@ -61,7 +61,7 @@ PaymentSchema.pre('findOneAndUpdate', async function (next) {
 
         // Actualizar cash_flow_by_month
         await CashFlow.findOneAndUpdate(
-            { _id: oldPayment.box },
+            { box: oldPayment.box },
             {
                 $inc: {
                     [updateField]: amountDifference,

@@ -42,8 +42,8 @@ export class PaymentController {
 
     async updatePayment(req: Request, res: Response): Promise<void> {
         try {
-            const { amount, box, payer } = req.body
-            const updatedPayment = await paymentService.updatePayment(req.params.id, { amount, box, payer })
+            const { amount, box, payer, concepts, type } = req.body
+            const updatedPayment = await paymentService.updatePaymentTransaction(req.params.id, { amount, box, payer, type }, concepts)
 
             if (updatedPayment) {
                 responses.success(req, res, updatedPayment)

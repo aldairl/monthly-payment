@@ -1,9 +1,9 @@
 import Box, { IBox } from "../models/Box";
 import { PaymentService } from "../../payments/services/PaymentsService"
-import { ConceptService } from "../../payments/services/ConceptService"
+import { PaymentConceptService } from '../../payments/services/PaymentConcepts'
 
-const conceptService = new ConceptService()
 const paymentService = new PaymentService()
+const paymentConceptService = new PaymentConceptService()
 
 export class BoxService {
     async getAllBoxes(year: number): Promise<IBox[]> {
@@ -58,6 +58,6 @@ export class BoxService {
     }
 
     async getBalanceByBox(id: string): Promise<IBox | null> {
-        return await conceptService.getTotalPaymentConceptsByBox(id)
+        return await paymentConceptService.getTotalPaymentConceptsByBox(id)
     }
 }

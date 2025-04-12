@@ -7,6 +7,7 @@ export interface IPaymentConcept extends Document {
     year: string
     amount: number
     creation_date: Date
+    deleted?: boolean;
 }
 
 const PaymentConceptSchema: Schema<IPaymentConcept> = new Schema({

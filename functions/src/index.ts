@@ -11,6 +11,7 @@ import monthRouter from './modules/payments/routes/monthRouter'
 import yearRouter from './modules/payments/routes/YearRouter'
 import beneficiaryRouter from './modules/beneficiaries/routes/BeneficiaryRouter'
 import roleRouter from './modules/auth/routes/roleRouter'
+import paymentConceptsRouter from './modules/payments/routes/PaymentConceptsRouter'
 
 connectDatabase()
 
@@ -27,5 +28,6 @@ app.use("/months", monthRouter)
 app.use("/years", yearRouter)
 app.use("/beneficiaries", beneficiaryRouter)
 app.use("/roles", roleRouter)
+app.use("/paymentConcepts", paymentConceptsRouter)
 
 export const api = https.onRequest(app)
