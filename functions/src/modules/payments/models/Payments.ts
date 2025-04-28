@@ -48,7 +48,7 @@ const PaymentSchema: Schema<IPayment> = new Schema({
 
 PaymentSchema.pre('findOneAndUpdate', async function (next) {
     try {
-        const update = this.getUpdate() as { amount?: number }
+        const update = this.getUpdate() as { amount?: number, type?: string }
         if (!update.amount) {
             return next()
         }
@@ -56,16 +56,44 @@ PaymentSchema.pre('findOneAndUpdate', async function (next) {
         const oldPayment = await this.model.findOne(this.getQuery()).exec()
         if (!oldPayment) return next()
 
+        const newType = update.type ?? oldPayment.type;
         const amountDifference = update.amount - oldPayment.amount
-        const updateField = oldPayment.type === 'income' ? 'total_income' : 'total_expense';
 
-        // Actualizar cash_flow_by_month
+        let incomeChange = 0;
+        let expenseChange = 0;
+        let balanceChange = 0;
+
+        if (oldPayment.type === newType) {
+            // Solo cambió el monto
+            if (newType === 'income') {
+                incomeChange = amountDifference;
+                balanceChange = amountDifference;
+            } else {
+                expenseChange = amountDifference;
+                balanceChange = -amountDifference;
+            }
+        } else {
+            // Cambió el tipo (income <-> expense)
+            if (oldPayment.type === 'income' && newType === 'expense') {
+                incomeChange = -oldPayment.amount;
+                expenseChange = update.amount;
+                balanceChange = -oldPayment.amount - update.amount;
+            } else if (oldPayment.type === 'expense' && newType === 'income') {
+                expenseChange = -oldPayment.amount;
+                incomeChange = update.amount;
+                balanceChange = oldPayment.amount + update.amount;
+            }
+        }
+
+        console.log({ incomeChange, expenseChange, balanceChange });
+
         await CashFlow.findOneAndUpdate(
             { box: oldPayment.box },
             {
                 $inc: {
-                    [updateField]: amountDifference,
-                    total_balance: amountDifference * (oldPayment.type === 'income' ? 1 : -1),
+                    total_income: incomeChange,
+                    total_expense: expenseChange,
+                    total_balance: balanceChange,
                 },
             }
         );
