@@ -3,10 +3,12 @@ import { CashFlowService } from "../../cashFlow/service/CashFlowService"
 import Payment, { IPayment } from "../models/Payments"
 import { PaymentConceptService } from './PaymentConcepts'
 import { IPaymentConcept } from "../models/PaymentConcepts"
+import { ReceiptService } from "./ReceiptServivice"
 // import { BeneficiaryService } from "../../beneficiaries/services/BeneficiaryService"
 
 const cashFlowService = new CashFlowService()
 const paymentConceptService = new PaymentConceptService()
+const receiptService = new ReceiptService()
 
 // const beneficiaryService = new BeneficiaryService()
 
@@ -21,19 +23,19 @@ export class PaymentService {
         const payment = await Payment.findById(id)
             .populate('payer', 'name lastname identification')
             .populate('box', 'name')
-        
+
         return { ...payment?.toObject(), concepts } as unknown as IPayment
     }
 
     async createPayment(paymentData: Partial<IPayment>, session: mongoose.ClientSession): Promise<IPayment> {
-        const receipt = await this.generateReceipt()
+        const receipt = await this.generateReceipt(paymentData.type || 'income')
         paymentData.receipt = receipt
         const paymentSaved = await Payment.create([{ ...paymentData }], { session })
         return paymentSaved[0]
     }
 
     async updatePayment(id: string, updatedData: Partial<IPayment>, session: mongoose.ClientSession): Promise<IPayment | null> {
-        const updated = await Payment.findOneAndUpdate({_id: id}, updatedData, { new: true, session })
+        const updated = await Payment.findOneAndUpdate({ _id: id }, updatedData, { new: true, session })
         return updated
     }
 
@@ -45,10 +47,9 @@ export class PaymentService {
         return result
     }
 
-    async generateReceipt() {
-        // TODO
-        const date = new Date().getTime()
-        return `A-${date}`
+    async generateReceipt(type: string): Promise<string> {
+        const currentReceipt = await receiptService.getNextSequence(type)
+        return currentReceipt.toString()
     }
 
     async deletePaymentTransaction(id: string): Promise<{ deleted: boolean }> {
@@ -101,7 +102,7 @@ export class PaymentService {
         session.startTransaction()
         try {
             const paymentEdited = await this.updatePayment(id, paymentData, session)
-            if(paymentEdited){
+            if (paymentEdited) {
                 await paymentConceptService.updateConceptsByPaymentId(paymentEdited._id as string, paymentConcepts, session)
             }
 
