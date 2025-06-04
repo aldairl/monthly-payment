@@ -264,6 +264,7 @@ export class PaymentService {
                     _id: 1,
                     amount: 1,
                     type: 1,
+                    receipt: 1,
                     payer: { $concat: ['$payerInfo.name', ' ', { $ifNull: ['$payerInfo.lastname', ''] }] },
                     identification: '$payerInfo.identification',
                     concepts: { $map: { input: '$concepts', as: 'c', in: '$$c.name' } },
