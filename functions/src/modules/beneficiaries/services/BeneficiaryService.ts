@@ -29,10 +29,11 @@ export class BeneficiaryService {
     }
 
     async getBeneficiaryByDniOrName(dniOrName: string) {
+
         const query = {
             $or: [
                 { dni: dniOrName },  // Coincidencia exacta en dni
-                { name: { $regex: dniOrName, $options: 'i' } }  // Búsqueda parcial y case insensitive en name
+                { name: { $regex: `.*${dniOrName}.*`, $options: 'i' } } // Búsqueda parcial y case insensitive en name
             ]
         };
 
@@ -47,7 +48,7 @@ export class BeneficiaryService {
                 $match: {
                     $or: [
                         { identification: dniOrName }, // Coincidencia exacta en dni
-                        { name: { $regex: dniOrName, $options: 'i' } } // Coincidencia parcial y case-insensitive en name
+                        { name: { $regex: `.*${dniOrName}.*`, $options: 'i' } } // Coincidencia parcial y case-insensitive en name
                     ]
                 }
             },
@@ -59,14 +60,13 @@ export class BeneficiaryService {
                     as: 'payments'
                 }
             },
-            { $sort: { 'payments.creation_date': -1 } }, // Ordenar por fecha de creación descendente
-            { $limit: 1 }, // Obtener solo el último pago
             {
                 $unwind: {
                     path: '$payments',
                     preserveNullAndEmptyArrays: true
                 }
-            }, 
+            },
+            { $sort: { 'payments.creation_date': -1 } }, // Ordenar por fecha de creación descendente
             {
                 $set: {
                     lastPayment: {
@@ -143,6 +143,7 @@ export class BeneficiaryService {
                     }
                 }
             },
+            // { $limit: 1 }, // Obtener solo el último pago
         ]
 
         const lastPayment = await BeneficiaryModel.aggregate(pipeline)
