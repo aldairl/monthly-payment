@@ -42,5 +42,5 @@ npm run serve
 
 1. config env vars
 2. create a build
-3. firebase login (if not legged before)
+3. firebase login (if not logged before)
 4. firebase deploy
