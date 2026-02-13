@@ -12,6 +12,26 @@ This is a project to recolect payments monthly, it allows to know incomne, expen
 
 install dependencies
 
+you need to have firebase cli installed
+
+```bash
+npm install -g firebase-tools
+```
+
+then login to firebase
+
+```bash
+firebase login
+```
+
+or re authenticate if you are already logged
+
+```bash
+firebase login --reauth
+```
+
+then install dependencies
+
 ```bash
 npm install
 ```
